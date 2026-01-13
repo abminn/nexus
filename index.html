@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/gn-math/gn-math.github.io@main/favicon.png">
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.3.1",
+    "react-dom": "https://esm.sh/react-dom@18.3.1",
+    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/"
+  }
+}
+</script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --bg-color: #020617;
+            --accent-color: #8b5cf6;
+            --accent-rgb: 139, 92, 246;
+            --text-color: #f1f5f9;
+            --glass-color: rgba(15, 23, 42, 0.7);
+            --glow: 0 0 20px rgba(var(--accent-rgb), 0.3);
+        }
+
+        /* Themes */
+        body.theme-amoled {
+            --bg-color: #000000;
+            --accent-color: #ffffff;
+            --accent-rgb: 255, 255, 255;
+            --glass-color: rgba(0, 0, 0, 0.85);
+            --glow: 0 0 15px rgba(255, 255, 255, 0.2);
+        }
+        body.theme-cyber {
+            --bg-color: #050505;
+            --accent-color: #00ff41;
+            --accent-rgb: 0, 255, 65;
+            --glass-color: rgba(6, 15, 6, 0.8);
+            --glow: 0 0 20px rgba(0, 255, 65, 0.4);
+        }
+        body.theme-rose {
+            --bg-color: #1a0a0f;
+            --accent-color: #fb7185;
+            --accent-rgb: 251, 113, 133;
+            --glass-color: rgba(45, 10, 20, 0.8);
+            --glow: 0 0 25px rgba(251, 113, 133, 0.3);
+        }
+        body.theme-gold {
+            --bg-color: #0c0a06;
+            --accent-color: #fbbf24;
+            --accent-rgb: 251, 191, 36;
+            --glass-color: rgba(25, 20, 10, 0.8);
+            --glow: 0 0 20px rgba(251, 191, 36, 0.3);
+        }
+        body.theme-admin-hellfire {
+            --bg-color: #050000;
+            --accent-color: #ff0000;
+            --accent-rgb: 255, 0, 0;
+            --glass-color: rgba(20, 0, 0, 0.9);
+            --glow: 0 0 30px rgba(255, 0, 0, 0.6);
+        }
+
+        body { 
+            font-family: 'Space Grotesk', sans-serif; 
+            overflow-x: hidden; 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            margin: 0; 
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        .animated-bg { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            z-index: -1; 
+            background: radial-gradient(circle at 50% 50%, rgba(var(--accent-rgb), 0.1) 0%, var(--bg-color) 100%); 
+            transition: background 0.4s ease;
+        }
+
+        .star { 
+            position: absolute; 
+            background: white; 
+            border-radius: 50%; 
+            opacity: 0.3; 
+            animation: twinkle var(--duration) infinite ease-in-out; 
+        }
+
+        @keyframes twinkle { 
+            0%, 100% { opacity: 0.3; transform: scale(1); } 
+            50% { opacity: 0.8; transform: scale(1.2); } 
+        }
+
+        .glass { 
+            background: var(--glass-color); 
+            backdrop-filter: blur(20px); 
+            -webkit-backdrop-filter: blur(20px); 
+            border: 1px solid rgba(var(--accent-rgb), 0.1); 
+            transition: background 0.4s ease, border 0.4s ease;
+        }
+
+        .accent-bg { background-color: var(--accent-color); transition: background-color 0.4s ease; }
+        .accent-text { color: var(--accent-color); transition: color 0.4s ease; }
+        .accent-border { border-color: var(--accent-color); transition: border-color 0.4s ease; }
+        .accent-glow { box-shadow: var(--glow); transition: box-shadow 0.4s ease; }
+
+        .game-card-shadow {
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .game-card-shadow:hover { 
+            box-shadow: 0 0 40px 5px rgba(var(--accent-rgb), 0.25); 
+            transform: translateY(-10px) scale(1.03); 
+            border-color: var(--accent-color);
+        }
+
+        .section-divider {
+            border-left: 4px solid var(--accent-color);
+            box-shadow: -10px 0 20px -5px rgba(var(--accent-rgb), 0.4);
+            padding-left: 1.25rem;
+            transition: all 0.4s ease;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-color); }
+        ::-webkit-scrollbar-thumb { background: rgba(var(--accent-rgb), 0.2); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
+
+        .loader-ring {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(var(--accent-rgb), 0.1);
+            border-radius: 50%;
+            border-top-color: var(--accent-color);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .modal-fade-in {
+            animation: fadeIn 0.25s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        input:focus {
+            box-shadow: 0 0 0 2px rgba(var(--accent-rgb), 0.3);
+        }
+
+        /* Fullscreen Helper */
+        #game-frame-container:fullscreen {
+            width: 100vw;
+            height: 100vh;
+            background: black;
+        }
+
+        .admin-bar-pulse {
+            animation: adminBorderPulse 2s infinite ease-in-out;
+        }
+        @keyframes adminBorderPulse {
+            0%, 100% { border-color: rgba(255, 0, 0, 0.2); }
+            50% { border-color: rgba(255, 0, 0, 0.8); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .animate-shake {
+            animation: shake 0.4s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="animated-bg" id="star-field"></div>
+    <div id="root"></div>
+
+    <script>
+        // Background Animation Initialization
+        const field = document.getElementById('star-field');
+        const starCount = 150;
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = Math.random() * 2 + 0.5;
+            star.style.width = size + 'px';
+            star.style.height = size + 'px';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.setProperty('--duration', (2 + Math.random() * 5) + 's');
+            field.appendChild(star);
+        }
+    </script>
+
+    <script type="module">
+        import React, { useState, useEffect, createElement, useMemo, useRef } from 'react';
+        import ReactDOM from 'react-dom/client';
+
+        const ZONES_URL = "https://cdn.jsdelivr.net/gh/gn-math/assets@main/zones.json";
+        const COVER_BASE = "https://cdn.jsdelivr.net/gh/gn-math/covers@main";
+        const HTML_BASE = "https://cdn.jsdelivr.net/gh/gn-math/html@main";
+
+        const HOT_TITLES = [
+            "Buckshot Roulette", "R.E.P.O", "ULTRAKILL", "People Playground", "Pizza Tower",
+            "Steal A Brainrot", "Steal Brainrot Online", "Schoolboy Runaway", "That's Not My Neighbor",
+            "The Man In The Window", "Fears to Fathom: Home Alone", "Amanda the Adventurer",
+            "Backrooms", "Granny 3", "Melon Playground", "WebFishing", "Solar Smash",
+            "Blade Ball", "Fortzone Battle Royale", "Smash Karts", "Gorilla Tag", "Sprunki"
+        ];
+
+        const FEATURED_TITLES = [
+            "Minecraft 1.21.4", "Minecraft 1.12.2", "Minecraft 1.8.8", "Geometry Dash Lite",
+            "Friday Night Funkin", "Happy Wheels", "Slope", "Slope 2", "Retro Bowl",
+            "Retro Bowl College", "Run 3", "Stick War: Legacy", "Rooftop Snipers",
+            "Rooftop Snipers 2", "Papa's Freezeria", "Papa's Pizzeria", "Papa's Bakeria",
+            "Plants vs Zombies", "Super Smash Flash", "Super Mario 64", "Super Mario Bros",
+            "Temple Run 2", "Tomb Of The Mask", "OvO", "OvO 2", "OvO 3 Dimensions",
+            "Cookie Clicker", "Cut the Rope", "Moto X3M", "Moto X3M 2", "Moto X3M Spooky",
+            "Moto X3M Winter", "Bloons TD 5"
+        ];
+
+        const THEMES = [
+            { id: 'dark', name: 'Cosmic Dark', class: '' },
+            { id: 'amoled', name: 'True Black', class: 'theme-amoled' },
+            { id: 'cyber', name: 'Cyber Neon', class: 'theme-cyber' },
+            { id: 'rose', name: 'Rose Nebula', class: 'theme-rose' },
+            { id: 'gold', name: 'Golden Sun', class: 'theme-gold' }
+        ];
+
+        const GameCard = ({ zone, icon, onClick }) => {
+            return createElement('div', {
+                key: zone.id,
+                onClick: onClick,
+                className: 'group relative bg-slate-900/50 rounded-[2rem] overflow-hidden cursor-pointer border border-white/5 transition-all duration-300 game-card-shadow'
+            },
+                createElement('div', { className: 'aspect-[3/4] relative overflow-hidden' },
+                    createElement('img', { 
+                        src: zone.cover.replace("{COVER_URL}", COVER_BASE), 
+                        alt: zone.name,
+                        className: 'w-full h-full object-cover transition-transform duration-700 group-hover:scale-110' 
+                    }),
+                    createElement('div', { 
+                        className: 'absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent opacity-80 group-hover:opacity-60 transition-opacity' 
+                    }),
+                    createElement('div', { className: 'absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity' },
+                        createElement('div', { className: 'w-14 h-14 bg-white/10 backdrop-blur-md rounded-full flex items-center justify-center border border-white/20' },
+                            createElement('span', { className: 'text-white font-bold' }, '>')
+                        )
+                    )
+                ),
+                createElement('div', { className: 'absolute bottom-0 left-0 right-0 p-4' },
+                    createElement('p', { className: 'text-center text-[11px] font-extrabold uppercase italic tracking-wider text-white truncate' }, 
+                        icon && createElement('span', { className: 'mr-1' }, icon),
+                        zone.name
+                    )
+                )
+            );
+        };
+
+        const GamePlayer = ({ zone, onClose }) => {
+            const [isLoading, setIsLoading] = useState(true);
+            const [htmlContent, setHtmlContent] = useState('');
+            const [blobUrl, setBlobUrl] = useState('');
+            const containerRef = useRef(null);
+
+            useEffect(() => {
+                let isMounted = true;
+                const gameUrl = zone.url.replace("{HTML_URL}", HTML_BASE);
+                
+                fetch(gameUrl)
+                    .then(r => r.text())
+                    .then(html => {
+                        if (!isMounted) return;
+                        setHtmlContent(html);
+                        const blob = new Blob([html], { type: 'text/html' });
+                        const url = URL.createObjectURL(blob);
+                        setBlobUrl(url);
+                        setIsLoading(false);
+                    })
+                    .catch(err => {
+                        console.error("Failed to load game content:", err);
+                        setIsLoading(false);
+                    });
+
+                return () => {
+                    isMounted = false;
+                    if (blobUrl) URL.revokeObjectURL(blobUrl);
+                };
+            }, [zone.url]);
+
+            const handleCapture = () => {
+                if (!htmlContent) return;
+                const blob = new Blob([htmlContent], { type: 'text/html' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = `${zone.name.replace(/\s+/g, '_')}_Source.html`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+            };
+
+            const handleFullscreen = () => {
+                if (containerRef.current) {
+                    if (containerRef.current.requestFullscreen) {
+                        containerRef.current.requestFullscreen();
+                    } else if (containerRef.current.webkitRequestFullscreen) {
+                        containerRef.current.webkitRequestFullscreen();
+                    }
+                }
+            };
+
+            return createElement('div', { 
+                className: 'fixed inset-0 z-[100] bg-black flex flex-col' 
+            },
+                createElement('div', { className: 'glass px-6 py-3 flex items-center justify-between border-b border-white/10' },
+                    createElement('div', { className: 'flex items-center gap-4' },
+                        createElement('span', { className: 'accent-text font-bold' }, '[G]'),
+                        createElement('div', null,
+                            createElement('h3', { className: 'text-sm font-bold tracking-wide' }, zone.name),
+                            createElement('p', { className: 'text-[10px] text-slate-400 uppercase tracking-widest' }, 'Streaming from Nebula')
+                        )
+                    ),
+                    createElement('div', { className: 'flex items-center gap-3' },
+                        createElement('button', { 
+                            onClick: handleCapture,
+                            disabled: isLoading,
+                            className: 'px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-xl transition-all border border-white/10 font-bold text-xs uppercase disabled:opacity-50' 
+                        }, 'CAPTURE'),
+                        createElement('button', { 
+                            onClick: handleFullscreen,
+                            disabled: isLoading,
+                            className: 'px-4 py-2 bg-white/5 hover:bg-white/10 text-white rounded-xl transition-all border border-white/10 font-bold text-xs uppercase disabled:opacity-50' 
+                        }, 'ENTER'),
+                        createElement('button', { 
+                            onClick: onClose, 
+                            className: 'px-4 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl transition-colors border border-red-500/20 font-bold text-xs uppercase' 
+                        }, 'EXIT CORE')
+                    )
+                ),
+                createElement('div', { 
+                    id: 'game-frame-container',
+                    ref: containerRef,
+                    className: 'flex-1 relative overflow-hidden' 
+                },
+                    isLoading && createElement('div', { className: 'absolute inset-0 flex flex-col items-center justify-center bg-slate-950/50 backdrop-blur-sm z-10' },
+                        createElement('div', { className: 'loader-ring mb-4' }),
+                        createElement('p', { className: 'accent-text font-medium animate-pulse text-sm' }, 'INITIATING CORE...')
+                    ),
+                    blobUrl && createElement('iframe', { 
+                        src: blobUrl, 
+                        className: 'w-full h-full border-none' 
+                    })
+                )
+            );
+        };
+
+        const SettingsModal = ({ onClose, currentTheme, onThemeChange, disabled }) => {
+            return createElement('div', { 
+                className: 'fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm',
+                onClick: onClose
+            },
+                createElement('div', { 
+                    className: 'glass w-full max-w-md p-8 rounded-[2.5rem] modal-fade-in flex flex-col gap-8 shadow-2xl',
+                    onClick: e => e.stopPropagation()
+                },
+                    createElement('div', { className: 'flex justify-between items-center' },
+                        createElement('h2', { className: 'text-2xl font-black tracking-tighter' }, 'CORE SETTINGS'),
+                        createElement('button', { onClick: onClose, className: 'text-slate-400 hover:text-white transition-colors' }, '✕')
+                    ),
+                    
+                    createElement('div', { className: 'space-y-4' },
+                        createElement('h3', { className: 'text-xs font-bold accent-text uppercase tracking-widest' }, 'Interface Theme'),
+                        disabled ? createElement('div', { className: 'p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-500 text-xs font-bold text-center' }, "THEMES DISABLED IN ADMIN MODE") :
+                        createElement('div', { className: 'grid grid-cols-2 gap-3' },
+                            THEMES.map(theme => createElement('button', {
+                                key: theme.id,
+                                onClick: () => onThemeChange(theme.id),
+                                className: `p-4 rounded-2xl border text-sm font-bold transition-all ${currentTheme === theme.id ? 'accent-border accent-bg text-black' : 'border-white/5 bg-white/5 hover:bg-white/10'}`
+                            }, theme.name))
+                        )
+                    ),
+
+                    createElement('div', { className: 'space-y-4' },
+                        createElement('h3', { className: 'text-xs font-bold accent-text uppercase tracking-widest' }, 'Technical Info'),
+                        createElement('div', { className: 'p-5 bg-white/5 rounded-2xl text-[11px] leading-relaxed text-slate-300' },
+                            createElement('p', { className: 'mb-4 opacity-70 italic' }, "Standalone terminal for low-latency gaming and nebula directory access."),
+                            createElement('div', { className: 'grid grid-cols-1 gap-2 pt-4 border-t border-white/5' },
+                                createElement('p', null, "• Intelligence: ", createElement('span', { className: 'text-white font-bold' }, "Nexus OS (Gemini AI)")),
+                                createElement('p', null, "• Directory & Assets: ", createElement('span', { className: 'text-white font-bold' }, "GN MATH"))
+                            )
+                        )
+                    ),
+
+                    createElement('button', { 
+                        onClick: onClose,
+                        className: 'accent-bg accent-glow w-full py-4 rounded-2xl font-bold transition-all hover:brightness-110 text-black'
+                    }, 'CONFIRM CONFIG')
+                )
+            );
+        };
+
+        const AdminPanel = ({ onAuth, onCancel }) => {
+            const [code, setCode] = useState("");
+            const [error, setError] = useState(false);
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                if (code === "4739") {
+                    onAuth();
+                } else {
+                    setError(true);
+                    setTimeout(() => setError(false), 500);
+                    setCode("");
+                }
+            };
+
+            return createElement('div', { 
+                className: 'fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md',
+                onClick: onCancel
+            },
+                createElement('div', { 
+                    className: `glass w-full max-w-sm p-10 rounded-[2.5rem] modal-fade-in flex flex-col gap-6 shadow-2xl border-2 transition-all ${error ? 'border-red-600 animate-shake' : 'border-red-600/20'}`,
+                    onClick: e => e.stopPropagation()
+                },
+                    createElement('div', { className: 'text-center space-y-2' },
+                        createElement('h2', { className: 'text-2xl font-black text-red-600 tracking-tighter' }, 'ADMIN ACCESS'),
+                        createElement('p', { className: 'text-[10px] text-red-500/50 uppercase tracking-[0.3em]' }, 'Enter Credentials')
+                    ),
+                    createElement('form', { onSubmit: handleSubmit, className: 'space-y-4' },
+                        createElement('input', {
+                            autoFocus: true,
+                            type: 'password',
+                            className: 'w-full px-6 py-4 rounded-2xl bg-white/5 border border-red-900 text-red-600 placeholder:text-red-900/40 text-center text-2xl font-black tracking-[1em] focus:outline-none transition-all',
+                            placeholder: '****',
+                            value: code,
+                            onChange: e => setCode(e.target.value)
+                        }),
+                        createElement('button', {
+                            type: 'submit',
+                            className: 'w-full py-4 bg-red-600 text-black rounded-2xl font-black hover:bg-red-500 transition-colors uppercase text-sm tracking-widest'
+                        }, 'AUTHENTICATE')
+                    ),
+                    createElement('button', {
+                        onClick: onCancel,
+                        className: 'text-xs text-red-900 hover:text-red-600 transition-colors uppercase tracking-widest font-bold'
+                    }, 'ABORT')
+                )
+            );
+        };
+
+        const App = () => {
+            const [zones, setZones] = useState([]);
+            const [search, setSearch] = useState("");
+            const [activeZone, setActiveZone] = useState(null);
+            const [isLoaded, setIsLoaded] = useState(false);
+            const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+            const [currentTheme, setCurrentTheme] = useState('dark');
+            
+            // Admin State
+            const [isAdminPanelOpen, setIsAdminPanelOpen] = useState(false);
+            const [isAdminMode, setIsAdminMode] = useState(false);
+            const keysPressed = useRef(new Set());
+
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    keysPressed.current.add(e.key.toLowerCase());
+                    const keys = keysPressed.current;
+                    if (
+                        (keys.has('control') || keys.has('meta')) && 
+                        keys.has('shift') && 
+                        keys.has('y') && 
+                        keys.has('u')
+                    ) {
+                        e.preventDefault();
+                        setIsAdminPanelOpen(true);
+                    }
+                };
+                const handleKeyUp = (e) => {
+                    keysPressed.current.delete(e.key.toLowerCase());
+                };
+                window.addEventListener('keydown', handleKeyDown);
+                window.addEventListener('keyup', handleKeyUp);
+                return () => {
+                    window.removeEventListener('keydown', handleKeyDown);
+                    window.removeEventListener('keyup', handleKeyUp);
+                };
+            }, []);
+
+            useEffect(() => {
+                fetch(ZONES_URL)
+                    .then(r => r.json())
+                    .then(data => {
+                        setZones(data);
+                        setIsLoaded(true);
+                    })
+                    .catch(err => console.error("Nebula Connection Failed:", err));
+            }, []);
+
+            useEffect(() => {
+                if (isAdminMode) {
+                    document.body.className = 'theme-admin-hellfire';
+                } else {
+                    const theme = THEMES.find(t => t.id === currentTheme);
+                    document.body.className = theme ? theme.class : '';
+                }
+            }, [currentTheme, isAdminMode]);
+
+            const { featured, allSorted } = useMemo(() => {
+                const featured = zones.filter(z => FEATURED_TITLES.includes(z.name));
+                const allSorted = [...zones].sort((a, b) => a.name.localeCompare(b.name));
+                return { featured, allSorted };
+            }, [zones]);
+
+            const filteredAll = allSorted.filter(z => z.name.toLowerCase().includes(search.toLowerCase()));
+            const filteredFeatured = featured.filter(z => z.name.toLowerCase().includes(search.toLowerCase()));
+
+            const handleExportStandalone = async () => {
+                try {
+                    // Fetch the actual source code of the current file
+                    const response = await fetch(window.location.href);
+                    const sourceText = await response.text();
+                    
+                    const blob = new Blob([sourceText], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'nexus.html';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                } catch (error) {
+                    console.error("Source capture failed. Falling back to DOM capture.", error);
+                    // Fallback to DOM capture if fetch fails (e.g. running locally via file://)
+                    const doctype = '<!DOCTYPE html>\n';
+                    const htmlContent = doctype + document.documentElement.outerHTML;
+                    const blob = new Blob([htmlContent], { type: 'text/html' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'nexus.html';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }
+            };
+
+            return createElement('div', { className: 'min-h-screen flex flex-col' },
+                // Admin Bar (Hellfire Control)
+                isAdminMode && createElement('div', { 
+                    className: 'glass sticky top-0 z-[110] px-6 py-2 bg-red-600/10 border-b border-red-600/50 flex items-center justify-between admin-bar-pulse' 
+                },
+                    createElement('div', { className: 'flex items-center gap-4' },
+                        createElement('span', { className: 'text-[10px] font-black text-red-600 animate-pulse' }, '[SYSTEM OVERRIDE ACTIVE]'),
+                        createElement('span', { className: 'text-[9px] text-red-500/60 uppercase tracking-widest' }, 'Secure Terminal v1.1.0')
+                    ),
+                    createElement('div', { className: 'flex gap-3' },
+                        createElement('button', {
+                            onClick: handleExportStandalone,
+                            className: 'px-4 py-1.5 bg-red-600 text-black text-[10px] font-black rounded-lg hover:bg-red-500 transition-colors uppercase'
+                        }, 'EXPORT STANDALONE'),
+                        createElement('button', {
+                            onClick: () => setIsAdminMode(false),
+                            className: 'px-4 py-1.5 bg-white/5 border border-red-600/30 text-red-600 text-[10px] font-black rounded-lg hover:bg-red-600 hover:text-black transition-all uppercase'
+                        }, 'EXIT ADMIN')
+                    )
+                ),
+
+                createElement('header', { className: 'glass sticky top-0 z-[60] px-6 py-5 border-b border-white/5' },
+                    createElement('div', { className: 'max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6' },
+                        createElement('div', { className: 'flex items-center gap-4 group cursor-default' },
+                            createElement('div', { className: 'accent-bg accent-glow p-3 rounded-2xl group-hover:rotate-12 transition-transform font-bold text-black' }, '^'),
+                            createElement('div', null,
+                                createElement('h1', { className: 'text-2xl font-black italic tracking-tighter text-white' }, 'Nexus'),
+                                createElement('p', { className: 'text-[10px] font-medium tracking-[0.2em] accent-text uppercase' }, 'funny game thing')
+                            )
+                        ),
+                        createElement('div', { className: 'flex items-center gap-4 w-full md:w-auto' },
+                            createElement('div', { className: 'relative flex-1 md:w-[450px]' },
+                                createElement('input', {
+                                    className: 'w-full px-6 py-3.5 rounded-2xl bg-white/5 border border-white/10 text-white placeholder:text-slate-500 focus:outline-none focus:bg-white/10 transition-all text-sm',
+                                    placeholder: 'i recommend searching kindergarten',
+                                    value: search,
+                                    onChange: e => setSearch(e.target.value)
+                                }),
+                                search && createElement('button', {
+                                    onClick: () => setSearch(""),
+                                    className: 'absolute right-4 top-1/2 -translate-y-1/2 p-1 hover:bg-white/10 rounded-lg text-slate-400'
+                                }, '✕')
+                            ),
+                            createElement('button', {
+                                onClick: () => setIsSettingsOpen(true),
+                                className: 'p-3.5 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors group'
+                            }, createElement('span', { className: 'block group-hover:rotate-45 transition-transform text-lg' }, '⚙️'))
+                        )
+                    )
+                ),
+
+                createElement('main', { className: `max-w-7xl mx-auto w-full p-8 transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'} space-y-16` },
+                    
+                    filteredFeatured.length > 0 && createElement('section', null,
+                        createElement('div', { className: 'section-divider mb-8' },
+                            createElement('h2', { className: 'text-xl font-black tracking-widest text-white uppercase flex items-center gap-2' }, 
+                                createElement('span', { className: 'text-yellow-400' }, '⭐'),
+                                "Featured Games"
+                            )
+                        ),
+                        createElement('div', { className: 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6' },
+                            filteredFeatured.map(z => createElement(GameCard, { 
+                                key: z.id + "-f", 
+                                zone: z, 
+                                icon: "⭐",
+                                onClick: () => setActiveZone(z) 
+                            }))
+                        )
+                    ),
+
+                    createElement('section', null,
+                        createElement('div', { className: 'section-divider mb-8' },
+                            createElement('h2', { className: 'text-xl font-black tracking-widest text-white uppercase' }, "All Games")
+                        ),
+                        filteredAll.length > 0 ? createElement('div', { 
+                            className: 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6' 
+                        },
+                            filteredAll.map((z) => {
+                                const isHot = HOT_TITLES.includes(z.name);
+                                return createElement(GameCard, { 
+                                    key: z.id, 
+                                    zone: z, 
+                                    icon: isHot ? "🔥" : null,
+                                    onClick: () => setActiveZone(z) 
+                                });
+                            })
+                        ) : createElement('div', { className: 'flex flex-col items-center justify-center py-24 text-slate-500' },
+                            createElement('p', { className: 'text-lg font-medium text-center' }, 'we dont have it yet but maybe email the owner and he will see what he can do.')
+                        )
+                    )
+                ),
+
+                createElement('footer', { className: 'mt-auto py-12 px-6 border-t border-white/5 text-center' },
+                    createElement('p', { className: 'text-[10px] text-slate-500 tracking-[0.4em] uppercase' }, 'nexus funny game thing by some random dude!')
+                ),
+
+                activeZone && createElement(GamePlayer, { 
+                    zone: activeZone, 
+                    onClose: () => setActiveZone(null) 
+                }),
+
+                isSettingsOpen && createElement(SettingsModal, {
+                    onClose: () => setIsSettingsOpen(false),
+                    currentTheme,
+                    disabled: isAdminMode,
+                    onThemeChange: (tid) => {
+                        setCurrentTheme(tid);
+                    }
+                }),
+
+                isAdminPanelOpen && createElement(AdminPanel, {
+                    onAuth: () => {
+                        setIsAdminMode(true);
+                        setIsAdminPanelOpen(false);
+                    },
+                    onCancel: () => setIsAdminPanelOpen(false)
+                })
+            );
+        };
+
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(createElement(App));
+    </script>
+</body>
+</html>
