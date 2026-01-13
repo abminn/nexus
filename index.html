@@ -45,14 +45,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
 
     <script type="importmap">
-{
-  "imports": {
-    "react": "https://esm.sh/react@18.3.1",
-    "react-dom": "https://esm.sh/react-dom@18.3.1",
-    "react-dom/client": "https://esm.sh/react-dom@18.3.1/client"
-  }
-}
-</script>
+    {
+      "imports": {
+        "react": "https://esm.sh/react@18.3.1",
+        "react-dom": "https://esm.sh/react-dom@18.3.1",
+        "react-dom/client": "https://esm.sh/react-dom@18.3.1/client"
+      }
+    }
+    </script>
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
@@ -191,9 +191,6 @@
             fill: currentColor;
             transition: transform 0.3s ease;
         }
-        .sidebar-item:hover .sidebar-icon {
-            transform: scale(1.1) rotate(5deg);
-        }
 
         .vault-section {
             display: flex;
@@ -265,6 +262,17 @@
             margin-left: 6px;
             box-shadow: 0 0 10px var(--accent-color);
         }
+
+        .utility-card {
+            aspect-ratio: 16/9;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            gap: 1rem;
+            padding: 2rem;
+        }
     </style>
 </head>
 <body>
@@ -329,7 +337,7 @@
             );
         };
 
-        const IDE = ({ onDeploy }) => {
+        const IDE = ({ onDeploy, onClose }) => {
             const editorHostRef = useRef(null);
             const cmInstance = useRef(null);
             const [isModified, setIsModified] = useState(false);
@@ -383,7 +391,14 @@
                     }
                 });
 
-                return () => { if (cmInstance.current) cmInstance.current.toTextArea(); };
+                return () => {
+                    if (cmInstance.current) {
+                        const wrapper = cmInstance.current.getWrapperElement();
+                        if (wrapper && wrapper.parentNode) {
+                            wrapper.parentNode.removeChild(wrapper);
+                        }
+                    }
+                };
             }, []);
 
             const formatCode = (cm) => {
@@ -413,36 +428,39 @@
                 reader.readAsText(file);
             };
 
-            return createElement('div', { className: 'glass rounded-3xl border border-white/10 overflow-hidden flex flex-col' },
-                createElement('div', { className: 'bg-white/5 p-4 border-b border-white/10 flex justify-between items-center' },
-                    createElement('div', { className: 'flex items-center gap-3' },
-                        createElement('div', { className: 'flex gap-1.5 mr-2' },
-                            createElement('div', { className: 'w-3 h-3 rounded-full bg-red-500/50' }),
-                            createElement('div', { className: 'w-3 h-3 rounded-full bg-amber-500/50' }),
-                            createElement('div', { className: 'w-3 h-3 rounded-full bg-green-500/50' })
+            return createElement('div', { className: 'fixed inset-0 z-[150] bg-black/80 backdrop-blur-xl flex items-center justify-center p-6' },
+                createElement('div', { className: 'glass w-full max-w-6xl rounded-3xl border border-white/10 overflow-hidden flex flex-col modal-fade-in h-[85vh]' },
+                    createElement('div', { className: 'bg-white/5 p-4 border-b border-white/10 flex justify-between items-center' },
+                        createElement('div', { className: 'flex items-center gap-3' },
+                            createElement('div', { className: 'flex gap-1.5 mr-2' },
+                                createElement('div', { className: 'w-3 h-3 rounded-full bg-red-500/50' }),
+                                createElement('div', { className: 'w-3 h-3 rounded-full bg-amber-500/50' }),
+                                createElement('div', { className: 'w-3 h-3 rounded-full bg-green-500/50' })
+                            ),
+                            createElement('span', { className: 'text-[10px] font-black uppercase tracking-widest opacity-60' }, 
+                                'workspace.html', isModified && createElement('span', { className: 'modified-dot' })
+                            )
                         ),
-                        createElement('span', { className: 'text-[10px] font-black uppercase tracking-widest opacity-60' }, 
-                            'workspace.html', isModified && createElement('span', { className: 'modified-dot' })
+                        createElement('div', { className: 'flex gap-2' },
+                            createElement('button', { onClick: () => formatCode(cmInstance.current), className: 'glass border border-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'Format'),
+                            createElement('label', { className: 'glass border border-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase cursor-pointer' }, 
+                                'Open', createElement('input', { type: 'file', className: 'hidden', onChange: handleFileOpen })
+                            ),
+                            createElement('button', { onClick: () => downloadCode(cmInstance.current.getValue()), className: 'glass border border-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'Save'),
+                            createElement('button', { onClick: () => onDeploy(cmInstance.current.getValue()), className: 'accent-bg text-black px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'Deploy'),
+                            createElement('button', { onClick: onClose, className: 'bg-red-500/10 text-red-500 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'Close')
                         )
                     ),
-                    createElement('div', { className: 'flex gap-2' },
-                        createElement('button', { onClick: () => formatCode(cmInstance.current), className: 'glass border border-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'Format'),
-                        createElement('label', { className: 'glass border border-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase cursor-pointer' }, 
-                            'Open', createElement('input', { type: 'file', className: 'hidden', onChange: handleFileOpen })
+                    createElement('div', { ref: editorHostRef, className: 'flex-1 overflow-hidden' }),
+                    createElement('div', { className: 'bg-black/40 px-6 py-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono opacity-50' },
+                        createElement('div', { className: 'flex gap-4' },
+                            createElement('span', null, `UTF-8`),
+                            createElement('span', null, `HTML (Mixed)`)
                         ),
-                        createElement('button', { onClick: () => downloadCode(cmInstance.current.getValue()), className: 'glass border border-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'Save'),
-                        createElement('button', { onClick: () => onDeploy(cmInstance.current.getValue()), className: 'accent-bg text-black px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'Deploy')
-                    )
-                ),
-                createElement('div', { ref: editorHostRef }),
-                createElement('div', { className: 'bg-black/40 px-6 py-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono opacity-50' },
-                    createElement('div', { className: 'flex gap-4' },
-                        createElement('span', null, `UTF-8`),
-                        createElement('span', null, `HTML (Mixed)`)
-                    ),
-                    createElement('div', { className: 'flex gap-4' },
-                        createElement('span', null, `Chars: ${stats.chars}`),
-                        createElement('span', null, `Ln ${stats.line}, Col ${stats.col}`)
+                        createElement('div', { className: 'flex gap-4' },
+                            createElement('span', null, `Chars: ${stats.chars}`),
+                            createElement('span', null, `Ln ${stats.line}, Col ${stats.col}`)
+                        )
                     )
                 )
             );
@@ -519,6 +537,7 @@
             const [isSettingsOpen, setIsSettingsOpen] = useState(false);
             const [isAdminMode, setIsAdminMode] = useState(false);
             const [activeTab, setActiveTab] = useState('games');
+            const [showIDE, setShowIDE] = useState(false);
             const [scrollPerc, setScrollPerc] = useState(0);
             const fileRef = useRef(null);
 
@@ -586,21 +605,34 @@
                             )))
                         )
                     ) : (
-                        createElement('section', { className: 'space-y-12 max-w-5xl mx-auto' },
+                        createElement('section', { className: 'space-y-12' },
                             createElement('div', { className: 'text-center' },
                                 createElement('h2', { className: 'text-3xl font-black italic tracking-tighter uppercase' }, 'Utilities Engine'),
                                 createElement('p', { className: 'text-slate-500 mt-2 text-sm' }, 'Build, debug, and deploy local HTML assets instantly.')
                             ),
-                            createElement(IDE, { onDeploy: (code) => setActiveZone({ name: 'IDE Preview', url: URL.createObjectURL(new Blob([code], {type: 'text/html'})), isIDE: true }) }),
-                            createElement('div', { onClick: () => fileRef.current?.click(), className: 'glass p-12 rounded-3xl border-2 border-dashed border-white/10 flex flex-col items-center gap-4 cursor-pointer hover:border-accent-color' },
-                                createElement('input', { type: 'file', ref: fileRef, accept: '.html', className: 'hidden', onChange: e => e.target.files[0] && setActiveZone({ name: e.target.files[0].name, url: URL.createObjectURL(e.target.files[0]), isLocal: true }) }),
-                                createElement('div', { className: 'w-16 h-16 glass rounded-2xl flex items-center justify-center text-3xl' }, '📂'),
-                                createElement('p', { className: 'font-black uppercase text-xs' }, 'Upload Local HTML')
+                            createElement('div', { className: 'grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto' },
+                                createElement('div', { onClick: () => setShowIDE(true), className: 'group utility-card glass rounded-3xl cursor-pointer game-card-hover border border-white/5 relative overflow-hidden' },
+                                    createElement('div', { className: 'absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity' }),
+                                    createElement('div', { className: 'w-16 h-16 glass rounded-2xl flex items-center justify-center text-3xl accent-glow mb-4' }, '🛠️'),
+                                    createElement('h3', { className: 'text-xl font-black uppercase italic' }, 'IDE Workspace'),
+                                    createElement('p', { className: 'text-xs text-slate-400 opacity-60' }, 'Full-stack HTML/CSS/JS Playground')
+                                ),
+                                createElement('div', { onClick: () => fileRef.current?.click(), className: 'group utility-card glass rounded-3xl cursor-pointer game-card-hover border border-white/5 relative overflow-hidden' },
+                                    createElement('div', { className: 'absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity' }),
+                                    createElement('input', { type: 'file', ref: fileRef, accept: '.html', className: 'hidden', onChange: e => e.target.files[0] && setActiveZone({ name: e.target.files[0].name, url: URL.createObjectURL(e.target.files[0]), isLocal: true }) }),
+                                    createElement('div', { className: 'w-16 h-16 glass rounded-2xl flex items-center justify-center text-3xl accent-glow mb-4' }, '📂'),
+                                    createElement('h3', { className: 'text-xl font-black uppercase italic' }, 'Local Upload'),
+                                    createElement('p', { className: 'text-xs text-slate-400 opacity-60' }, 'Launch local HTML build files')
+                                )
                             )
                         )
                     )
                 ),
 
+                showIDE && createElement(IDE, { 
+                    onClose: () => setShowIDE(false),
+                    onDeploy: (code) => setActiveZone({ name: 'IDE Preview', url: URL.createObjectURL(new Blob([code], {type: 'text/html'})), isIDE: true }) 
+                }),
                 activeZone && createElement(GamePlayer, { zone: activeZone, isAdminActive: isAdminMode, onClose: () => setActiveZone(null) }),
                 isSettingsOpen && createElement(SettingsModal, { onClose: () => setIsSettingsOpen(false), currentTheme, onThemeChange: setCurrentTheme, currentCloak: cloakTitle, onCloakChange: setCloakTitle })
             );
