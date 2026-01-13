@@ -6,6 +6,44 @@
     <title>Nexus</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="https://cdn.jsdelivr.net/gh/gn-math/gn-math.github.io@main/favicon.png">
+    
+    <!-- CodeMirror Core -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/theme/dracula.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/dialog/dialog.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/fold/foldgutter.min.css">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/xml/xml.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/javascript/javascript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/css/css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/mode/htmlmixed/htmlmixed.min.js"></script>
+    
+    <!-- CodeMirror Addons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closetag.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/closebrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/fold/xml-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/fold/foldcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/fold/foldgutter.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/fold/brace-fold.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchtags.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/xml-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/html-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/css-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/javascript-hint.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/search/search.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/search/searchcursor.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/search/jump-to-line.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/dialog/dialog.min.js"></script>
+    
+    <!-- Formatting -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
+
     <script type="importmap">
 {
   "imports": {
@@ -201,25 +239,31 @@
         @media (min-width: 1280px) { .vault-grid { grid-template-columns: repeat(6, 1fr); } }
         @media (min-width: 1536px) { .vault-grid { grid-template-columns: repeat(7, 1fr); } }
 
-        /* Code Editor Specifics */
-        .smart-editor {
+        /* CodeMirror Integrated Styles */
+        .CodeMirror {
+            height: 500px !important;
             font-family: 'Fira Code', monospace;
-            line-height: 1.6;
-            resize: none;
-            outline: none;
-            tab-size: 4;
+            font-size: 14px;
+            background: transparent !important;
+            color: #fff !important;
+            border-radius: 0 0 24px 24px;
         }
-        .suggestion-box {
-            position: absolute;
-            z-index: 1000;
-            min-width: 200px;
-            max-height: 250px;
-            overflow-y: auto;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        .CodeMirror-gutters {
+            background: rgba(255,255,255,0.03) !important;
+            border-right: 1px solid rgba(255,255,255,0.1) !important;
         }
-        .suggestion-item.active {
+        .CodeMirror-linenumber { color: rgba(255,255,255,0.3) !important; }
+        .CodeMirror-cursor { border-left: 2px solid var(--accent-color) !important; }
+        .cm-s-dracula .CodeMirror-selected { background: rgba(var(--accent-rgb), 0.3) !important; }
+        
+        .modified-dot {
+            width: 6px;
+            height: 6px;
             background: var(--accent-color);
-            color: black;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 6px;
+            box-shadow: 0 0 10px var(--accent-color);
         }
     </style>
 </head>
@@ -246,10 +290,6 @@
             { id: 'gold', name: 'Golden Sun', class: 'theme-gold' }
         ];
 
-        const HTML_TAGS = ['div', 'span', 'p', 'h1', 'h2', 'h3', 'section', 'article', 'main', 'header', 'footer', 'nav', 'aside', 'button', 'input', 'img', 'a', 'ul', 'ol', 'li', 'form', 'label', 'canvas', 'video', 'audio', 'details', 'summary', 'dialog'];
-        const VOID_TAGS = ['img', 'input', 'br', 'hr', 'meta', 'link'];
-        const ATTRIBUTES = ['class', 'id', 'src', 'href', 'style', 'type', 'placeholder', 'value', 'onclick', 'width', 'height', 'loading'];
-
         const GameIcon = () => createElement('svg', { className: 'sidebar-icon', viewBox: '0 0 24 24' },
             createElement('path', { d: 'M21,6H3C1.9,6,1,6.9,1,8v8c0,1.1,0.9,2,2,2h18c1.1,0,2-0.9,2-2V8C23,6.9,22.1,6,21,6z M18,15c-0.55,0-1-0.45-1-1s0.45-1,1-1s1,0.45,1,1S18.55,15,18,15z M20,12c-0.55,0-1-0.45-1-1s0.45-1,1-1s1,0.45,1,1S20.55,12,20,12z M11,13H9v2H8v-2H6v-1h2V10h1v2h2V13z' })
         );
@@ -261,7 +301,13 @@
         const GameCard = ({ zone, variant = 'normal', onClick }) => {
             const isHot = HOT_TITLES.includes(zone.name);
             const isFeatured = FEATURED_TITLES.includes(zone.name);
-            const sizeClasses = { hero: 'aspect-square w-full h-full', wide: 'aspect-video w-full', normal: 'aspect-[3/4] w-full', carousel: 'aspect-[3/4] w-[160px] flex-shrink-0', vault: 'aspect-[3/4] w-full' };
+            const sizeClasses = { 
+                hero: 'aspect-square w-full h-full', 
+                wide: 'aspect-video w-full', 
+                normal: 'aspect-[3/4] w-full', 
+                carousel: 'aspect-[3/4] w-[160px] flex-shrink-0', 
+                vault: 'aspect-[3/4] w-full' 
+            };
             const coverSrc = zone.isLocal ? 'https://cdn.jsdelivr.net/gh/gn-math/assets@main/local_game_cover.png' : zone.cover.replace("{COVER_URL}", COVER_BASE);
 
             return createElement('div', { onClick, className: `group relative glass rounded-xl overflow-hidden cursor-pointer game-card-hover border border-white/5 ${sizeClasses[variant]}` },
@@ -284,148 +330,119 @@
         };
 
         const IDE = ({ onDeploy }) => {
-            const [code, setCode] = useState('<!-- Nexus IDE v4.0 -->\n<div class="container">\n    <h1>New Project</h1>\n</div>');
-            const [suggestions, setSuggestions] = useState([]);
-            const [selectedIndex, setSelectedIndex] = useState(0);
-            const [suggestPos, setSuggestPos] = useState({ x: 0, y: 0 });
-            const textareaRef = useRef(null);
+            const editorHostRef = useRef(null);
+            const cmInstance = useRef(null);
+            const [isModified, setIsModified] = useState(false);
+            const [stats, setStats] = useState({ line: 1, col: 1, chars: 0 });
 
-            const memory = useMemo(() => {
-                const ids = code.match(/id="([^"]*)"/g)?.map(m => m.slice(4, -1)) || [];
-                const classes = code.match(/class="([^"]*)"/g)?.map(m => m.slice(7, -1)) || [];
-                return { ids: [...new Set(ids)], classes: [...new Set(classes)] };
-            }, [code]);
+            const template = `<!-- Nexus IDE v5.0 -->\n<div class="container">\n    <h1>New Project</h1>\n</div>\n\n<style>\n  .container { font-family: sans-serif; text-align: center; color: #8b5cf6; }\n</style>`;
 
-            const handleKeyDown = (e) => {
-                const area = textareaRef.current;
-                const { selectionStart, selectionEnd, value } = area;
-
-                if (suggestions.length > 0) {
-                    if (e.key === 'ArrowDown') { e.preventDefault(); setSelectedIndex(i => (i + 1) % suggestions.length); return; }
-                    if (e.key === 'ArrowUp') { e.preventDefault(); setSelectedIndex(i => (i - 1 + suggestions.length) % suggestions.length); return; }
-                    if (e.key === 'Enter' || e.key === 'Tab') { e.preventDefault(); applySuggestion(suggestions[selectedIndex]); return; }
-                    if (e.key === 'Escape') { setSuggestions([]); return; }
-                }
-
-                if (e.key === 'Tab') {
-                    e.preventDefault();
-                    const newValue = value.substring(0, selectionStart) + "    " + value.substring(selectionEnd);
-                    setCode(newValue);
-                    setTimeout(() => { area.selectionStart = area.selectionEnd = selectionStart + 4; }, 0);
-                }
-
-                if (e.key === 'Enter') {
-                    const lineStart = value.lastIndexOf('\n', selectionStart - 1) + 1;
-                    const currentLine = value.substring(lineStart, selectionStart);
-                    const indent = currentLine.match(/^\s*/)[0];
-                    const charBefore = value[selectionStart - 1];
-                    const charAfter = value[selectionStart];
-
-                    if (charBefore === '>' && charAfter === '<' && value[selectionStart + 1] === '/') {
-                        e.preventDefault();
-                        const newText = `\n${indent}    \n${indent}`;
-                        setCode(value.slice(0, selectionStart) + newText + value.slice(selectionStart));
-                        setTimeout(() => { area.selectionStart = area.selectionEnd = selectionStart + indent.length + 5; }, 0);
-                    } else {
-                        e.preventDefault();
-                        setCode(value.slice(0, selectionStart) + '\n' + indent + value.slice(selectionStart));
-                        setTimeout(() => { area.selectionStart = area.selectionEnd = selectionStart + indent.length + 1; }, 0);
+            useEffect(() => {
+                if (!editorHostRef.current) return;
+                
+                const editor = CodeMirror(editorHostRef.current, {
+                    value: template,
+                    mode: "htmlmixed",
+                    theme: "dracula",
+                    lineNumbers: true,
+                    autoCloseTags: true,
+                    autoCloseBrackets: true,
+                    matchTags: { bothTags: true },
+                    matchBrackets: true,
+                    foldGutter: true,
+                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+                    tabSize: 4,
+                    indentUnit: 4,
+                    lineWrapping: true,
+                    extraKeys: { 
+                        "Ctrl-Space": "autocomplete",
+                        "Ctrl-S": (cm) => downloadCode(cm.getValue()),
+                        "Ctrl-Enter": (cm) => onDeploy(cm.getValue()),
+                        "Ctrl-Shift-F": (cm) => formatCode(cm)
                     }
-                }
+                });
+                
+                cmInstance.current = editor;
+
+                editor.on("change", (cm) => {
+                    setIsModified(true);
+                    setStats({
+                        line: cm.getCursor().line + 1,
+                        col: cm.getCursor().ch + 1,
+                        chars: cm.getValue().length
+                    });
+                });
+
+                editor.on("cursorActivity", (cm) => {
+                    setStats(prev => ({ ...prev, line: cm.getCursor().line + 1, col: cm.getCursor().ch + 1 }));
+                });
+
+                editor.on("inputRead", (cm, event) => {
+                    if (event.origin === "+input" && event.text[0] !== " " && event.text[0] !== ";" && event.text[0] !== "(") {
+                        CodeMirror.commands.autocomplete(cm, null, { completeSingle: false });
+                    }
+                });
+
+                return () => { if (cmInstance.current) cmInstance.current.toTextArea(); };
+            }, []);
+
+            const formatCode = (cm) => {
+                const code = cm.getValue();
+                const formatted = html_beautify(code, { indent_size: 4 });
+                cm.setValue(formatted);
             };
 
-            const handleChange = (e) => {
-                const val = e.target.value;
-                const pos = e.target.selectionStart;
-                const lastChar = val[pos - 1];
-                const before = val.slice(0, pos);
-
-                if (lastChar === '>') {
-                    const tagMatch = before.match(/<([a-zA-Z0-9]+)$/);
-                    if (tagMatch) {
-                        const tag = tagMatch[1];
-                        if (VOID_TAGS.includes(tag)) {
-                            const updated = before.slice(0, -1) + " />" + val.slice(pos);
-                            setCode(updated);
-                            setTimeout(() => { e.target.selectionStart = e.target.selectionEnd = pos + 2; }, 0);
-                        } else {
-                            const updated = before + "</" + tag + ">" + val.slice(pos);
-                            setCode(updated);
-                            setTimeout(() => { e.target.selectionStart = e.target.selectionEnd = pos; }, 0);
-                        }
-                    } else { setCode(val); }
-                } else { setCode(val); }
-
-                const line = before.split('\n').pop();
-                const tagTrigger = line.match(/<([a-zA-Z0-9]*)$/);
-                const attrTrigger = line.match(/<[a-zA-Z0-9]+\s+([a-zA-Z]*)$/);
-                const classTrigger = line.match(/class="([^"]*)$/);
-                const idTrigger = line.match(/id="([^"]*)$/);
-
-                if (tagTrigger) {
-                    const filtered = HTML_TAGS.filter(t => t.startsWith(tagTrigger[1].toLowerCase()));
-                    if (filtered.length) { updateSuggestUI(filtered.map(f => ({label: f, type: 'tag'})), pos); return; }
-                }
-                if (attrTrigger) {
-                    const filtered = ATTRIBUTES.filter(a => a.startsWith(attrTrigger[1].toLowerCase()));
-                    if (filtered.length) { updateSuggestUI(filtered.map(f => ({label: f, type: 'attr'})), pos); return; }
-                }
-                if (classTrigger) {
-                    const filtered = memory.classes.filter(c => c.startsWith(classTrigger[1].toLowerCase()));
-                    if (filtered.length) { updateSuggestUI(filtered.map(f => ({label: f, type: 'class'})), pos); return; }
-                }
-                if (idTrigger) {
-                    const filtered = memory.ids.filter(i => i.startsWith(idTrigger[1].toLowerCase()));
-                    if (filtered.length) { updateSuggestUI(filtered.map(f => ({label: f, type: 'id'})), pos); return; }
-                }
-                setSuggestions([]);
+            const downloadCode = (code) => {
+                const blob = new Blob([code], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'nexus_project.html';
+                a.click();
+                setIsModified(false);
             };
 
-            const updateSuggestUI = (list, pos) => {
-                const lines = code.slice(0, pos).split('\n');
-                setSuggestions(list);
-                setSelectedIndex(0);
-                setSuggestPos({ x: Math.min(lines[lines.length - 1].length * 9, 400), y: lines.length * 24 });
+            const handleFileOpen = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onload = (ev) => {
+                    cmInstance.current.setValue(ev.target.result);
+                    setIsModified(false);
+                };
+                reader.readAsText(file);
             };
 
-            const applySuggestion = (s) => {
-                const area = textareaRef.current;
-                const pos = area.selectionStart;
-                const before = code.slice(0, pos);
-                const after = code.slice(pos);
-                let newBefore;
-
-                if (s.type === 'tag') newBefore = before.replace(/<[a-zA-Z0-9]*$/, `<${s.label}`);
-                else if (s.type === 'attr') newBefore = before.replace(/\s+[a-zA-Z]*$/, ` ${s.label}=""`);
-                else if (s.type === 'class' || s.type === 'id') newBefore = before.replace(/"[^"]*$/, `"${s.label}"`);
-
-                setCode(newBefore + after);
-                setSuggestions([]);
-                setTimeout(() => { area.focus(); area.selectionStart = area.selectionEnd = newBefore.length - (s.type === 'attr' ? 1 : 0); }, 0);
-            };
-
-            return createElement('div', { className: 'glass rounded-3xl border border-white/10 overflow-hidden flex flex-col relative' },
+            return createElement('div', { className: 'glass rounded-3xl border border-white/10 overflow-hidden flex flex-col' },
                 createElement('div', { className: 'bg-white/5 p-4 border-b border-white/10 flex justify-between items-center' },
-                    createElement('div', { className: 'flex gap-1.5' },
-                        createElement('div', { className: 'w-3 h-3 rounded-full bg-red-500/50' }),
-                        createElement('div', { className: 'w-3 h-3 rounded-full bg-amber-500/50' }),
-                        createElement('div', { className: 'w-3 h-3 rounded-full bg-green-500/50' })
+                    createElement('div', { className: 'flex items-center gap-3' },
+                        createElement('div', { className: 'flex gap-1.5 mr-2' },
+                            createElement('div', { className: 'w-3 h-3 rounded-full bg-red-500/50' }),
+                            createElement('div', { className: 'w-3 h-3 rounded-full bg-amber-500/50' }),
+                            createElement('div', { className: 'w-3 h-3 rounded-full bg-green-500/50' })
+                        ),
+                        createElement('span', { className: 'text-[10px] font-black uppercase tracking-widest opacity-60' }, 
+                            'workspace.html', isModified && createElement('span', { className: 'modified-dot' })
+                        )
                     ),
                     createElement('div', { className: 'flex gap-2' },
-                        createElement('button', { onClick: () => onDeploy(code), className: 'accent-bg text-black px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'Deploy'),
-                        createElement('button', { onClick: () => {
-                            const blob = new Blob([code], { type: 'text/html' });
-                            window.open(URL.createObjectURL(blob), '_blank');
-                        }, className: 'glass border border-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'New Tab')
+                        createElement('button', { onClick: () => formatCode(cmInstance.current), className: 'glass border border-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'Format'),
+                        createElement('label', { className: 'glass border border-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase cursor-pointer' }, 
+                            'Open', createElement('input', { type: 'file', className: 'hidden', onChange: handleFileOpen })
+                        ),
+                        createElement('button', { onClick: () => downloadCode(cmInstance.current.getValue()), className: 'glass border border-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'Save'),
+                        createElement('button', { onClick: () => onDeploy(cmInstance.current.getValue()), className: 'accent-bg text-black px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'Deploy')
                     )
                 ),
-                createElement('div', { className: 'relative' },
-                    createElement('textarea', { ref: textareaRef, value: code, onChange: handleChange, onKeyDown: handleKeyDown, className: 'w-full h-[500px] smart-editor bg-transparent p-6 text-white text-sm overflow-auto whitespace-pre', spellCheck: false }),
-                    suggestions.length > 0 && createElement('div', { className: 'suggestion-box glass border border-accent-color/30 rounded-xl overflow-hidden', style: { left: suggestPos.x + 20, top: suggestPos.y + 40 } },
-                        suggestions.map((s, i) => createElement('div', { key: i, onClick: () => applySuggestion(s), className: `px-4 py-2 cursor-pointer text-xs font-bold flex justify-between ${i === selectedIndex ? 'active' : ''}` }, 
-                            createElement('span', null, s.label),
-                            createElement('span', { className: 'opacity-40 text-[8px]' }, s.type.toUpperCase())
-                        ))
+                createElement('div', { ref: editorHostRef }),
+                createElement('div', { className: 'bg-black/40 px-6 py-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono opacity-50' },
+                    createElement('div', { className: 'flex gap-4' },
+                        createElement('span', null, `UTF-8`),
+                        createElement('span', null, `HTML (Mixed)`)
+                    ),
+                    createElement('div', { className: 'flex gap-4' },
+                        createElement('span', null, `Chars: ${stats.chars}`),
+                        createElement('span', null, `Ln ${stats.line}, Col ${stats.col}`)
                     )
                 )
             );
