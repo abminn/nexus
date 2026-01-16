@@ -30,13 +30,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchtags.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/edit/matchbrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/show-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/xml-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/html-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/css-hint.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/hint/javascript-hint.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/search/search.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/search/searchcursor.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/search/jump-to-line.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.13/addon/dialog/dialog.min.js"></script>
     
     <!-- Formatting -->
@@ -164,115 +159,30 @@
             position: relative;
             overflow: hidden;
             display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem 1.5rem;
-            width: 100%;
-            border-radius: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            font-size: 0.875rem;
+            align-items: center; gap: 1rem; padding: 1rem 1.5rem; width: 100%; border-radius: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.875rem;
         }
-        .sidebar-item:hover {
-            background: rgba(var(--accent-rgb), 0.1);
-            padding-left: 2rem;
-            color: var(--accent-color);
-        }
-        .sidebar-item.active {
-            background: rgba(var(--accent-rgb), 0.15);
-            border-left: 4px solid var(--accent-color);
-            color: var(--accent-color);
-            text-shadow: 0 0 10px rgba(var(--accent-rgb), 0.5);
-        }
-        .sidebar-icon {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-            transition: transform 0.3s ease;
-        }
+        .sidebar-item:hover { background: rgba(var(--accent-rgb), 0.1); padding-left: 2rem; color: var(--accent-color); }
+        .sidebar-item.active { background: rgba(var(--accent-rgb), 0.15); border-left: 4px solid var(--accent-color); color: var(--accent-color); text-shadow: 0 0 10px rgba(var(--accent-rgb), 0.5); }
+        .sidebar-icon { width: 20px; height: 20px; fill: currentColor; transition: transform 0.3s ease; }
 
-        .vault-section {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-            margin-bottom: 4rem;
-        }
+        .vault-section { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 4rem; }
+        .letter-header { display: flex; align-items: center; gap: 1rem; user-select: none; }
+        .letter-circle { width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; background: rgba(var(--accent-rgb), 0.05); border: 1px solid rgba(var(--accent-rgb), 0.1); border-radius: 12px; font-size: 1.5rem; font-weight: 900; color: var(--accent-color); }
+        .letter-line { flex: 1; height: 1px; background: linear-gradient(to right, rgba(var(--accent-rgb), 0.2), transparent); }
 
-        .letter-header {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            user-select: none;
-        }
-
-        .letter-circle {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: rgba(var(--accent-rgb), 0.05);
-            border: 1px solid rgba(var(--accent-rgb), 0.1);
-            border-radius: 12px;
-            font-size: 1.5rem;
-            font-weight: 900;
-            color: var(--accent-color);
-        }
-
-        .letter-line {
-            flex: 1;
-            height: 1px;
-            background: linear-gradient(to right, rgba(var(--accent-rgb), 0.2), transparent);
-        }
-
-        .vault-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-        }
+        .vault-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
         @media (min-width: 640px) { .vault-grid { grid-template-columns: repeat(3, 1fr); } }
         @media (min-width: 1024px) { .vault-grid { grid-template-columns: repeat(5, 1fr); } }
         @media (min-width: 1280px) { .vault-grid { grid-template-columns: repeat(6, 1fr); } }
         @media (min-width: 1536px) { .vault-grid { grid-template-columns: repeat(7, 1fr); } }
 
-        /* CodeMirror Integrated Styles */
-        .CodeMirror {
-            height: 500px !important;
-            font-family: 'Fira Code', monospace;
-            font-size: 14px;
-            background: transparent !important;
-            color: #fff !important;
-            border-radius: 0 0 24px 24px;
-        }
-        .CodeMirror-gutters {
-            background: rgba(255,255,255,0.03) !important;
-            border-right: 1px solid rgba(255,255,255,0.1) !important;
-        }
+        .CodeMirror { height: 500px !important; font-family: 'Fira Code', monospace; font-size: 14px; background: transparent !important; color: #fff !important; border-radius: 0 0 24px 24px; }
+        .CodeMirror-gutters { background: rgba(255,255,255,0.03) !important; border-right: 1px solid rgba(255,255,255,0.1) !important; }
         .CodeMirror-linenumber { color: rgba(255,255,255,0.3) !important; }
-        .CodeMirror-cursor { border-left: 2px solid var(--accent-color) !important; }
         .cm-s-dracula .CodeMirror-selected { background: rgba(var(--accent-rgb), 0.3) !important; }
         
-        .modified-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--accent-color);
-            border-radius: 50%;
-            display: inline-block;
-            margin-left: 6px;
-            box-shadow: 0 0 10px var(--accent-color);
-        }
-
-        .utility-card {
-            aspect-ratio: 16/9;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            gap: 1rem;
-            padding: 2rem;
-        }
+        .modified-dot { width: 6px; height: 6px; background: var(--accent-color); border-radius: 50%; display: inline-block; margin-left: 6px; box-shadow: 0 0 10px var(--accent-color); }
+        .utility-card { aspect-ratio: 16/9; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; gap: 1rem; padding: 2rem; }
     </style>
 </head>
 <body>
@@ -347,105 +257,31 @@
 
             useEffect(() => {
                 if (!editorHostRef.current) return;
-                
                 const editor = CodeMirror(editorHostRef.current, {
-                    value: template,
-                    mode: "htmlmixed",
-                    theme: "dracula",
-                    lineNumbers: true,
-                    autoCloseTags: true,
-                    autoCloseBrackets: true,
-                    matchTags: { bothTags: true },
-                    matchBrackets: true,
-                    foldGutter: true,
-                    gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-                    tabSize: 4,
-                    indentUnit: 4,
-                    lineWrapping: true,
-                    extraKeys: { 
-                        "Ctrl-Space": "autocomplete",
-                        "Ctrl-S": (cm) => downloadCode(cm.getValue()),
-                        "Ctrl-Enter": (cm) => onDeploy(cm.getValue()),
-                        "Ctrl-Shift-F": (cm) => formatCode(cm)
-                    }
+                    value: template, mode: "htmlmixed", theme: "dracula", lineNumbers: true,
+                    autoCloseTags: true, autoCloseBrackets: true, matchTags: { bothTags: true }, matchBrackets: true,
+                    foldGutter: true, gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"], tabSize: 4, indentUnit: 4, lineWrapping: true
                 });
-                
                 cmInstance.current = editor;
-
-                editor.on("change", (cm) => {
-                    setIsModified(true);
-                    setStats({
-                        line: cm.getCursor().line + 1,
-                        col: cm.getCursor().ch + 1,
-                        chars: cm.getValue().length
-                    });
-                });
-
-                editor.on("cursorActivity", (cm) => {
-                    setStats(prev => ({ ...prev, line: cm.getCursor().line + 1, col: cm.getCursor().ch + 1 }));
-                });
-
-                editor.on("inputRead", (cm, event) => {
-                    if (event.origin === "+input" && event.text[0] !== " " && event.text[0] !== ";" && event.text[0] !== "(") {
-                        CodeMirror.commands.autocomplete(cm, null, { completeSingle: false });
-                    }
-                });
-
-                return () => {
-                    if (cmInstance.current) {
-                        const wrapper = cmInstance.current.getWrapperElement();
-                        if (wrapper && wrapper.parentNode) {
-                            wrapper.parentNode.removeChild(wrapper);
-                        }
-                    }
-                };
+                editor.on("change", (cm) => { setIsModified(true); setStats({ line: cm.getCursor().line + 1, col: cm.getCursor().ch + 1, chars: cm.getValue().length }); });
+                editor.on("cursorActivity", (cm) => { setStats(prev => ({ ...prev, line: cm.getCursor().line + 1, col: cm.getCursor().ch + 1 })); });
+                return () => { if (cmInstance.current) { const wrapper = cmInstance.current.getWrapperElement(); if (wrapper && wrapper.parentNode) { wrapper.parentNode.removeChild(wrapper); } } };
             }, []);
 
-            const formatCode = (cm) => {
-                const code = cm.getValue();
-                const formatted = html_beautify(code, { indent_size: 4 });
-                cm.setValue(formatted);
-            };
-
-            const downloadCode = (code) => {
-                const blob = new Blob([code], { type: 'text/html' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'nexus_project.html';
-                a.click();
-                setIsModified(false);
-            };
-
-            const handleFileOpen = (e) => {
-                const file = e.target.files[0];
-                if (!file) return;
-                const reader = new FileReader();
-                reader.onload = (ev) => {
-                    cmInstance.current.setValue(ev.target.result);
-                    setIsModified(false);
-                };
-                reader.readAsText(file);
-            };
+            const formatCode = (cm) => { const code = cm.getValue(); const formatted = html_beautify(code, { indent_size: 4 }); cm.setValue(formatted); };
+            const downloadCode = (code) => { const blob = new Blob([code], { type: 'text/html' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = 'nexus_project.html'; a.click(); setIsModified(false); };
+            const handleFileOpen = (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = (ev) => { cmInstance.current.setValue(ev.target.result); setIsModified(false); }; reader.readAsText(file); };
 
             return createElement('div', { className: 'fixed inset-0 z-[150] bg-black/80 backdrop-blur-xl flex items-center justify-center p-6' },
                 createElement('div', { className: 'glass w-full max-w-6xl rounded-3xl border border-white/10 overflow-hidden flex flex-col modal-fade-in h-[85vh]' },
                     createElement('div', { className: 'bg-white/5 p-4 border-b border-white/10 flex justify-between items-center' },
                         createElement('div', { className: 'flex items-center gap-3' },
-                            createElement('div', { className: 'flex gap-1.5 mr-2' },
-                                createElement('div', { className: 'w-3 h-3 rounded-full bg-red-500/50' }),
-                                createElement('div', { className: 'w-3 h-3 rounded-full bg-amber-500/50' }),
-                                createElement('div', { className: 'w-3 h-3 rounded-full bg-green-500/50' })
-                            ),
-                            createElement('span', { className: 'text-[10px] font-black uppercase tracking-widest opacity-60' }, 
-                                'workspace.html', isModified && createElement('span', { className: 'modified-dot' })
-                            )
+                            createElement('div', { className: 'flex gap-1.5 mr-2' }, createElement('div', { className: 'w-3 h-3 rounded-full bg-red-500/50' }), createElement('div', { className: 'w-3 h-3 rounded-full bg-amber-500/50' }), createElement('div', { className: 'w-3 h-3 rounded-full bg-green-500/50' })),
+                            createElement('span', { className: 'text-[10px] font-black uppercase tracking-widest opacity-60' }, 'workspace.html', isModified && createElement('span', { className: 'modified-dot' }))
                         ),
                         createElement('div', { className: 'flex gap-2' },
                             createElement('button', { onClick: () => formatCode(cmInstance.current), className: 'glass border border-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'Format'),
-                            createElement('label', { className: 'glass border border-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase cursor-pointer' }, 
-                                'Open', createElement('input', { type: 'file', className: 'hidden', onChange: handleFileOpen })
-                            ),
+                            createElement('label', { className: 'glass border border-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase cursor-pointer' }, 'Open', createElement('input', { type: 'file', className: 'hidden', onChange: handleFileOpen })),
                             createElement('button', { onClick: () => downloadCode(cmInstance.current.getValue()), className: 'glass border border-white/10 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'Save'),
                             createElement('button', { onClick: () => onDeploy(cmInstance.current.getValue()), className: 'accent-bg text-black px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'Deploy'),
                             createElement('button', { onClick: onClose, className: 'bg-red-500/10 text-red-500 px-4 py-1.5 rounded-lg text-[10px] font-black uppercase' }, 'Close')
@@ -453,14 +289,8 @@
                     ),
                     createElement('div', { ref: editorHostRef, className: 'flex-1 overflow-hidden' }),
                     createElement('div', { className: 'bg-black/40 px-6 py-2 border-t border-white/10 flex items-center justify-between text-[10px] font-mono opacity-50' },
-                        createElement('div', { className: 'flex gap-4' },
-                            createElement('span', null, `UTF-8`),
-                            createElement('span', null, `HTML (Mixed)`)
-                        ),
-                        createElement('div', { className: 'flex gap-4' },
-                            createElement('span', null, `Chars: ${stats.chars}`),
-                            createElement('span', null, `Ln ${stats.line}, Col ${stats.col}`)
-                        )
+                        createElement('div', { className: 'flex gap-4' }, createElement('span', null, `UTF-8`), createElement('span', null, `HTML (Mixed)`)),
+                        createElement('div', { className: 'flex gap-4' }, createElement('span', null, `Chars: ${stats.chars}`), createElement('span', null, `Ln ${stats.line}, Col ${stats.col}`))
                     )
                 )
             );
@@ -490,26 +320,47 @@
 
         const GamePlayer = ({ zone, onClose, isAdminActive }) => {
             const [isLoading, setIsLoading] = useState(true);
-            const [blobUrl, setBlobUrl] = useState('');
+            const [playerUrl, setPlayerUrl] = useState('');
             const containerRef = useRef(null);
 
             useEffect(() => {
-                if (zone.isLocal || zone.isIDE) { setBlobUrl(zone.url); setIsLoading(false); return; }
-                fetch(zone.url.replace("{HTML_URL}", HTML_BASE)).then(r => r.text()).then(html => {
-                    const blob = new Blob([html], { type: 'text/html' });
-                    setBlobUrl(URL.createObjectURL(blob)); setIsLoading(false);
-                });
-            }, [zone.url]);
+                const resolveAndLoad = async () => {
+                    setIsLoading(true);
+                    let finalUrl = zone.url;
+                    if (!zone.isLocal && !zone.isIDE) finalUrl = zone.url.replace("{HTML_URL}", HTML_BASE);
+
+                    /**
+                     * DUAL-ENGINE STRATEGY:
+                     * Single HTML files from jsDelivr/GitHub are served as text/plain.
+                     * We MUST Blob-tunnel them to force text/html rendering.
+                     * Complex builds (Unity, WASM, YouTube) MUST use direct URLs to preserve paths/origins.
+                     */
+                    const isSingleHtml = finalUrl.endsWith(".html") && !zone.isUnity && !zone.isLocal && !zone.isIDE;
+
+                    if (isSingleHtml) {
+                        try {
+                            const res = await fetch(finalUrl);
+                            const html = await res.text();
+                            const blob = new Blob([html], { type: "text/html" });
+                            setPlayerUrl(URL.createObjectURL(blob));
+                        } catch (e) { setPlayerUrl(finalUrl); }
+                    } else {
+                        setPlayerUrl(finalUrl);
+                    }
+                    setIsLoading(false);
+                };
+                resolveAndLoad();
+                return () => { if (playerUrl && playerUrl.startsWith('blob:')) URL.revokeObjectURL(playerUrl); };
+            }, [zone.url, zone.isLocal, zone.isIDE]);
 
             const handleDownload = async () => {
-                const response = await fetch(blobUrl);
+                const downloadUrl = (zone.isLocal || zone.isIDE) ? zone.url : zone.url.replace("{HTML_URL}", HTML_BASE);
+                const response = await fetch(downloadUrl);
                 const text = await response.text();
                 const blob = new Blob([text], { type: 'text/html' });
                 const dUrl = URL.createObjectURL(blob);
                 const a = document.createElement('a');
-                a.href = dUrl;
-                a.download = `${zone.name.replace(/\s+/g, '_')}.html`;
-                a.click();
+                a.href = dUrl; a.download = `${zone.name.replace(/\s+/g, '_')}.html`; a.click();
             };
 
             return createElement('div', { className: `fixed inset-0 z-[120] bg-black flex flex-col ${isAdminActive ? 'top-[42px]' : 'top-0'}` },
@@ -523,7 +374,12 @@
                 ),
                 createElement('div', { ref: containerRef, className: 'flex-1 relative bg-black' },
                     isLoading && createElement('div', { className: 'absolute inset-0 flex items-center justify-center' }, createElement('div', { className: 'w-8 h-8 border-4 border-accent-color/20 border-t-accent-color rounded-full animate-spin' })),
-                    blobUrl && createElement('iframe', { src: blobUrl, className: 'w-full h-full border-none' })
+                    playerUrl && createElement('iframe', { 
+                        src: playerUrl, onLoad: () => setIsLoading(false),
+                        className: `w-full h-full border-none ${isLoading ? 'opacity-0' : 'opacity-100'}`,
+                        allow: "fullscreen; autoplay; gamepad; microphone; camera; midi; encrypted-media",
+                        referrerPolicy: "no-referrer"
+                    })
                 )
             );
         };
@@ -538,7 +394,6 @@
             const [isAdminMode, setIsAdminMode] = useState(false);
             const [activeTab, setActiveTab] = useState('games');
             const [showIDE, setShowIDE] = useState(false);
-            const [scrollPerc, setScrollPerc] = useState(0);
             const fileRef = useRef(null);
 
             useEffect(() => { fetch(ZONES_URL).then(r => r.json()).then(setZones); }, []);
@@ -558,22 +413,15 @@
             return createElement('div', { className: 'min-h-screen flex flex-col' },
                 createElement('div', { className: 'sidebar-trigger' }),
                 createElement('aside', { className: 'sidebar flex flex-col p-6 gap-8' },
-                    createElement('div', { className: 'flex items-center gap-3 mb-6' },
-                        createElement('div', { className: 'w-10 h-10 accent-bg rounded-xl flex items-center justify-center text-black font-black text-xl accent-glow' }, 'N'),
-                        createElement('span', { className: 'font-black italic text-xl tracking-tighter' }, 'NEXUS')
-                    ),
+                    createElement('div', { className: 'flex items-center gap-3 mb-6' }, createElement('div', { className: 'w-10 h-10 accent-bg rounded-xl flex items-center justify-center text-black font-black text-xl accent-glow' }, 'N'), createElement('span', { className: 'font-black italic text-xl tracking-tighter' }, 'NEXUS')),
                     createElement('nav', { className: 'flex-1 flex flex-col gap-3' },
                         createElement('button', { onClick: () => setActiveTab('games'), className: `sidebar-item ${activeTab === 'games' ? 'active' : ''}` }, createElement(GameIcon), 'Games'),
                         createElement('button', { onClick: () => setActiveTab('utilities'), className: `sidebar-item ${activeTab === 'utilities' ? 'active' : ''}` }, createElement(UtilityIcon), 'Utilities')
                     )
                 ),
-
                 createElement('header', { className: 'glass sticky top-0 z-[60] px-6 py-4 border-b border-white/5 flex items-center justify-between' },
                     createElement('div', { className: 'flex items-center gap-4' },
-                        createElement('div', { className: 'relative w-12 h-12 flex items-center justify-center' },
-                            createElement('div', { className: 'absolute inset-0 logo-ring rounded-full' }),
-                            createElement('div', { className: 'accent-bg accent-glow w-6 h-6 rounded-lg flex items-center justify-center text-black font-black text-[10px] z-10' }, 'N')
-                        ),
+                        createElement('div', { className: 'relative w-12 h-12 flex items-center justify-center' }, createElement('div', { className: 'absolute inset-0 logo-ring rounded-full' }), createElement('div', { className: 'accent-bg accent-glow w-6 h-6 rounded-lg flex items-center justify-center text-black font-black text-[10px] z-10' }, 'N')),
                         createElement('h1', { className: 'text-2xl font-black italic tracking-tighter text-white' }, 'Nexus')
                     ),
                     createElement('div', { className: 'flex items-center gap-3' },
@@ -581,7 +429,6 @@
                         createElement('button', { onClick: () => setIsSettingsOpen(true), className: 'p-2.5 glass rounded-xl hover:bg-white/10' }, '⚙️')
                     )
                 ),
-
                 createElement('main', { className: 'max-w-[90rem] mx-auto w-full py-12 px-6 space-y-24' },
                     activeTab === 'games' ? (
                         createElement(React.Fragment, null,
@@ -595,7 +442,7 @@
                             ),
                             createElement('section', { className: 'space-y-4' },
                                 createElement('h2', { className: 'section-header text-xl font-black italic' }, 'Hot Right Now'),
-                                createElement('div', { onScroll: e => setScrollPerc(e.currentTarget.scrollLeft / (e.currentTarget.scrollWidth - e.currentTarget.clientWidth)), className: 'flex gap-4 overflow-x-auto pb-4 visible-scroll snap-x' },
+                                createElement('div', { className: 'flex gap-4 overflow-x-auto pb-4 visible-scroll snap-x' },
                                     filteredAndGrouped.hot.map(g => createElement('div', { key: g.id, className: 'snap-start' }, createElement(GameCard, { variant: 'carousel', zone: g, onClick: () => setActiveZone(g) })))
                                 )
                             ),
@@ -606,10 +453,7 @@
                         )
                     ) : (
                         createElement('section', { className: 'space-y-12' },
-                            createElement('div', { className: 'text-center' },
-                                createElement('h2', { className: 'text-3xl font-black italic tracking-tighter uppercase' }, 'Utilities Engine'),
-                                createElement('p', { className: 'text-slate-500 mt-2 text-sm' }, 'Build, debug, and deploy local HTML assets instantly.')
-                            ),
+                            createElement('div', { className: 'text-center' }, createElement('h2', { className: 'text-3xl font-black italic tracking-tighter uppercase' }, 'Utilities Engine'), createElement('p', { className: 'text-slate-500 mt-2 text-sm' }, 'Build, debug, and deploy local HTML assets instantly.')),
                             createElement('div', { className: 'grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto' },
                                 createElement('div', { onClick: () => setShowIDE(true), className: 'group utility-card glass rounded-3xl cursor-pointer game-card-hover border border-white/5 relative overflow-hidden' },
                                     createElement('div', { className: 'absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity' }),
@@ -628,11 +472,7 @@
                         )
                     )
                 ),
-
-                showIDE && createElement(IDE, { 
-                    onClose: () => setShowIDE(false),
-                    onDeploy: (code) => setActiveZone({ name: 'IDE Preview', url: URL.createObjectURL(new Blob([code], {type: 'text/html'})), isIDE: true }) 
-                }),
+                showIDE && createElement(IDE, { onClose: () => setShowIDE(false), onDeploy: (code) => setActiveZone({ name: 'IDE Preview', url: URL.createObjectURL(new Blob([code], {type: 'text/html'})), isIDE: true }) }),
                 activeZone && createElement(GamePlayer, { zone: activeZone, isAdminActive: isAdminMode, onClose: () => setActiveZone(null) }),
                 isSettingsOpen && createElement(SettingsModal, { onClose: () => setIsSettingsOpen(false), currentTheme, onThemeChange: setCurrentTheme, currentCloak: cloakTitle, onCloakChange: setCloakTitle })
             );
