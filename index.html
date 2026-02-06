@@ -329,18 +329,41 @@
                     let finalUrl = zone.url;
                     if (!zone.isLocal && !zone.isIDE) finalUrl = zone.url.replace("{HTML_URL}", HTML_BASE);
 
+                    const isUnity = zone.isUnity || (zone.special && (zone.special.includes('port') || zone.special.includes('unity')));
+                    const isFlash = zone.special && zone.special.includes('flash');
+                    const isYouTube = finalUrl.includes("youtube.com/playables") || finalUrl.includes("youtube.com/embed");
+
                     /**
                      * DUAL-ENGINE STRATEGY:
                      * Single HTML files from jsDelivr/GitHub are served as text/plain.
                      * We MUST Blob-tunnel them to force text/html rendering.
                      * Complex builds (Unity, WASM, YouTube) MUST use direct URLs to preserve paths/origins.
                      */
-                    const isSingleHtml = finalUrl.endsWith(".html") && !zone.isUnity && !zone.isLocal && !zone.isIDE;
+                    const isSingleHtml = finalUrl.endsWith(".html") && !isYouTube && !zone.isLocal && !zone.isIDE;
 
                     if (isSingleHtml) {
                         try {
                             const res = await fetch(finalUrl);
-                            const html = await res.text();
+                            let html = await res.text();
+
+                            if (isFlash) {
+                                const ruffleScript = '<script src="https://unpkg.com/@ruffle-rs/ruffle"><' + '/script>';
+                                if (html.includes('<' + 'head>')) {
+                                    html = html.replace('<' + 'head>', '<' + 'head>' + ruffleScript);
+                                } else {
+                                    html = ruffleScript + html;
+                                }
+                            }
+
+                            if (isUnity) {
+                                const baseUrl = finalUrl.substring(0, finalUrl.lastIndexOf('/') + 1);
+                                if (!html.includes('<' + 'base')) {
+                                    if (html.includes('<' + 'head>')) {
+                                        html = html.replace('<' + 'head>', '<' + 'head><' + 'base href="' + baseUrl + '">');
+                                    }
+                                }
+                            }
+
                             const blob = new Blob([html], { type: "text/html" });
                             setPlayerUrl(URL.createObjectURL(blob));
                         } catch (e) { setPlayerUrl(finalUrl); }
@@ -377,7 +400,7 @@
                     playerUrl && createElement('iframe', { 
                         src: playerUrl, onLoad: () => setIsLoading(false),
                         className: `w-full h-full border-none ${isLoading ? 'opacity-0' : 'opacity-100'}`,
-                        allow: "fullscreen; autoplay; gamepad; microphone; camera; midi; encrypted-media",
+                        allow: "fullscreen; autoplay; gamepad; microphone; camera; midi; encrypted-media; xr-spatial-tracking; clipboard-read; clipboard-write",
                         referrerPolicy: "no-referrer"
                     })
                 )
