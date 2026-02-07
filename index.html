@@ -57,12 +57,13 @@
 			--glass-border: rgba(255, 255, 255, 0.08);
 			--glass-bg: rgba(255, 255, 255, 0.03);
 			--card-bg: rgba(255, 255, 255, 0.02);
+            --text-bright: #ffffff;
 		}
 
-		body.theme-amoled { --bg-color: #000000; --accent-color: #ffffff; --accent-rgb: 255, 255, 255; }
-		body.theme-cyber { --bg-color: #020804; --accent-color: #00ff41; --accent-rgb: 0, 255, 65; }
-		body.theme-rose { --bg-color: #0a0507; --accent-color: #fb7185; --accent-rgb: 251, 113, 133; }
-		body.theme-gold { --bg-color: #080704; --accent-color: #fbbf24; --accent-rgb: 251, 191, 36; }
+		body.theme-amoled { --bg-color: #000000; --accent-color: #ffffff; --accent-rgb: 255, 255, 255; --text-bright: #ffffff; }
+		body.theme-cyber { --bg-color: #020804; --accent-color: #00ff41; --accent-rgb: 0, 255, 65; --text-bright: #00ff41; }
+		body.theme-rose { --bg-color: #0a0507; --accent-color: #fb7185; --accent-rgb: 251, 113, 133; --text-bright: #fb7185; }
+		body.theme-gold { --bg-color: #080704; --accent-color: #fbbf24; --accent-rgb: 251, 191, 36; --text-bright: #fbbf24; }
 
 		body {
 			font-family: 'Space Grotesk', sans-serif;
@@ -72,6 +73,9 @@
 			overflow-x: hidden;
 			transition: background-color 0.8s cubic-bezier(0.19, 1, 0.22, 1);
 		}
+
+        /* Reactive White Text Override */
+        .text-white { color: var(--text-bright) !important; }
 
 		.living-bg {
 			position: fixed;
@@ -121,7 +125,7 @@
 		.section-header {
 			border-left: 5px solid var(--accent-color);
 			padding-left: 1.5rem; text-transform: uppercase;
-			letter-spacing: 0.2em; color: #fff; font-weight: 800;
+			letter-spacing: 0.2em; color: var(--text-bright); font-weight: 800;
 		}
 
 		.badge {
@@ -139,16 +143,25 @@
 		}
 		.sidebar-trigger:hover+.sidebar, .sidebar:hover { left: 0; }
 
+        /* Top Bar Autohide System */
+        .header-trigger { position: fixed; top: 0; left: 0; width: 100%; height: 30px; z-index: 59; }
+        .header-bar {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 60;
+            transform: translateY(-100%);
+            transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .header-trigger:hover+.header-bar, .header-bar:hover { transform: translateY(0); }
+
 		.sidebar-item {
 			transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 			display: flex; align-items: center; gap: 1rem; padding: 1.1rem 1.6rem; width: 100%; border-radius: 0.8rem;
 			font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; font-size: 0.85rem; color: #444;
 		}
-		.sidebar-item:hover { background: rgba(var(--accent-rgb), 0.08); color: #fff; padding-left: 2.1rem; }
-		.sidebar-item.active { background: rgba(var(--accent-rgb), 0.05); border-left: 4px solid var(--accent-color); color: #fff; }
+		.sidebar-item:hover { background: rgba(var(--accent-rgb), 0.08); color: var(--text-bright); padding-left: 2.1rem; }
+		.sidebar-item.active { background: rgba(var(--accent-rgb), 0.05); border-left: 4px solid var(--accent-color); color: var(--text-bright); }
 
 		.home-container { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 2rem; text-align: center; }
-		.home-title { font-size: 8.5rem; font-weight: 800; letter-spacing: -0.05em; color: #fff; line-height: 0.9; margin: 0; filter: drop-shadow(0 0 20px rgba(255,255,255,0.05)); }
+		.home-title { font-size: 8.5rem; font-weight: 800; letter-spacing: -0.05em; color: var(--text-bright); line-height: 0.9; margin: 0; filter: drop-shadow(0 0 20px rgba(var(--accent-rgb),0.05)); }
 		.home-subtitle { color: #555; font-size: 1.4rem; margin-top: -0.5rem; font-weight: 500; letter-spacing: 0.05em; }
 
 		.search-container { width: 100%; max-width: 600px; margin-top: 1.5rem; perspective: 1500px; }
@@ -157,7 +170,7 @@
 			padding: 1.4rem 2.2rem; display: flex; align-items: center; gap: 1.4rem; transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
 		}
 		.search-bar:focus-within { border-color: rgba(var(--accent-rgb), 0.4); background: rgba(30, 30, 30, 0.6); box-shadow: 0 0 50px rgba(0,0,0,0.4); }
-		.search-bar input { background: transparent; border: none; color: #fff; width: 100%; outline: none; font-size: 1.2rem; }
+		.search-bar input { background: transparent; border: none; color: var(--text-bright); width: 100%; outline: none; font-size: 1.2rem; }
 
 		.stat-row { display: flex; gap: 3rem; margin-top: 2rem; color: #333; font-size: 0.9rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.15em; }
 		.stat-dot { width: 9px; height: 9px; border-radius: 50%; background: #222; transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1); }
@@ -166,10 +179,10 @@
 		.dock-wrapper { position: fixed; bottom: 4rem; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 2.5rem; z-index: 80; }
 		.dock { background: rgba(10, 10, 10, 0.4); backdrop-filter: blur(35px); border: 1px solid rgba(var(--accent-rgb), 0.1); padding: 1.1rem 2.2rem; border-radius: 40px; display: flex; gap: 2.5rem; }
 		.dock-btn { position: relative; cursor: pointer; color: #333; transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1); }
-		.dock-btn:hover { color: #fff; transform: scale(1.25); }
+		.dock-btn:hover { color: var(--text-bright); transform: scale(1.25); }
 		.tooltip {
 			position: absolute; bottom: 180%; left: 50%; transform: translateX(-50%) translateY(15px);
-			background: #fff; color: #000; padding: 0.6rem 1.4rem; border-radius: 14px;
+			background: var(--text-bright); color: #000; padding: 0.6rem 1.4rem; border-radius: 14px;
 			font-size: 0.75rem; font-weight: 900; text-transform: uppercase; white-space: nowrap;
 			opacity: 0; visibility: hidden; transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1);
 		}
@@ -178,19 +191,19 @@
 		.letter-circle {
 			width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;
 			background: var(--glass-bg); border: 1px solid var(--glass-border);
-			border-radius: 18px; font-size: 1.8rem; font-weight: 900; color: #fff;
+			border-radius: 18px; font-size: 1.8rem; font-weight: 900; color: var(--text-bright);
 		}
 
 		.vault-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.8rem; }
 		.utility-card { aspect-ratio: 16/9; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 2.5rem; text-align: center; }
 
-		.CodeMirror { height: 100% !important; font-family: 'Fira Code', monospace; font-size: 14px; background: #080808 !important; color: #fff !important; }
+		.CodeMirror { height: 100% !important; font-family: 'Fira Code', monospace; font-size: 14px; background: #080808 !important; color: var(--text-bright) !important; }
 		
 		/* QoL Components */
 		.themed-btn { background: var(--accent-color); color: #000; font-weight: 900; transition: all 0.4s cubic-bezier(0.19, 1, 0.22, 1); }
 		.themed-btn:hover { filter: brightness(0.9); transform: translateY(-2px); }
 		.themed-btn:active { transform: scale(0.95); }
-		.themed-btn-secondary { background: rgba(var(--accent-rgb), 0.08); color: #fff; border: 1px solid var(--glass-border); }
+		.themed-btn-secondary { background: rgba(var(--accent-rgb), 0.08); color: var(--text-bright); border: 1px solid var(--glass-border); }
 		.themed-btn-secondary:hover { background: rgba(var(--accent-rgb), 0.15); border-color: rgba(var(--accent-rgb), 0.3); }
 
 		.whoopies-box { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10rem 0; gap: 3rem; }
@@ -199,6 +212,9 @@
 
 		/* Page Transitions */
 		.page-exit-active { pointer-events: none; }
+
+        /* Art Tools specific */
+        .art-canvas { cursor: crosshair; touch-action: none; background: #fff; border-radius: 1rem; }
 	</style>
 </head>
 
@@ -210,7 +226,7 @@
 	<div id="root"></div>
 
 	<script type="module">
-		import React, { useState, useEffect, createElement, useMemo, useRef } from 'react';
+		import React, { useState, useEffect, createElement, useMemo, useRef, Fragment } from 'react';
         import ReactDOM from 'react-dom/client';
         import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
 
@@ -262,7 +278,9 @@
         const HomeIcon = () => createElement('svg', { className: 'w-5 h-5 fill-current', viewBox: '0 0 24 24' }, createElement('path', { d: 'M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z' }));
         const GameIcon = () => createElement('svg', { className: 'w-5 h-5 fill-current', viewBox: '0 0 24 24' }, createElement('path', { d: 'M21,6H3C1.9,6,1,6.9,1,8v8c0,1.1,0.9,2,2,2h18c1.1,0,2-0.9,2-2V8C23,6.9,22.1,6,21,6z M18,15c-0.55,0-1-0.45-1-1s0.45-1,1-1s1,0.45,1,1S18.55,15,18,15z M20,12c-0.55,0-1-0.45-1-1s0.45-1,1-1s1,0.45,1,1S20.55,12,20,12z M11,13H9v2H8v-2H6v-1h2V10h1v2h2V13z' }));
         const AnimeIcon = () => createElement('svg', { className: 'w-5 h-5 fill-current', viewBox: '0 0 24 24' }, createElement('path', { d: 'M12 2L4.5 20.29l.71.71L12 18l6.79 3 .71-.71L12 2z' }));
+        const MangaIcon = () => createElement('svg', { className: 'w-5 h-5 fill-current', viewBox: '0 0 24 24' }, createElement('path', { d: 'M21 5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5-1.45-1.1-3.55-1.5-5.5-1.5-1.17 0-2.39.15-3.5.5V19.5c1.11-.35 2.33-.5 3.5-.5 1.95 0-4.05.4 5.5 1.5 1.45-1.1 3.55-1.5 5.5-1.5 1.17 0-2.39.15 3.5.5V5zM12 7.5c1.45-1.1 3.55-1.5 5.5-1.5 1.17 0-2.39.15 3.5.5v11.5c-1.11-.35-2.33-.5-3.5-.5-1.95 0-4.05.4-5.5 1.5V7.5z' }));
         const ToolIcon = () => createElement('svg', { className: 'w-5 h-5 fill-current', viewBox: '0 0 24 24' }, createElement('path', { d: 'M22.7,19l-9.1-9.1c0.9-2.3,0.4-5-1.5-6.9c-2-2-5-2.4-7.4-1.3L9,6.5L6.5,9L1.7,4.2c-1.1,2.4-0.7,5.4,1.3,7.4c1.9,1.9,4.5,2.4,6.9,1.5l9.1,9.1c0.4,0.4,1,0.4,1.4,0l2.3-2.3C23.1,19.9,23.1,19.3,22.7,19z' }));
+        const ArtIcon = () => createElement('svg', { className: 'w-5 h-5 fill-current', viewBox: '0 0 24 24' }, createElement('path', { d: 'M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c2.76 0 5-2.24 5-5 0-4.42-4.03-8-9-8zm-5.5 9c-.83 0-1.5-.67-1.5-1.5S5.67 9 6.5 9 8 9.67 8 10.5 7.33 12 6.5 12zm3-4C8.67 8 8 7.33 8 6.5S8.67 5 9.5 5s1.5.67 1.5 1.5S10.33 8 9.5 8zm5 0c-.83 0-1.5-.67-1.5-1.5S13.67 5 14.5 5s1.5.67 1.5 1.5S15.33 8 14.5 8zm3 4c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z' }));
 
         const SettingsModal = ({ onClose, currentTheme, onThemeChange, currentCloak, onCloakChange }) => (
             createElement('div', { className: 'fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md', onClick: onClose },
@@ -278,7 +296,7 @@
                                 type: 'text', value: currentCloak, 
                                 onChange: (e) => onCloakChange(e.target.value), 
                                 placeholder: 'Tab Title...', 
-                                className: 'w-full themed-input rounded-2xl px-6 py-4 text-sm transition-all focus:border-white/30' 
+                                className: 'w-full themed-input rounded-2xl px-6 py-4 text-sm transition-all focus:border-white/30 outline-none' 
                             })
                         ),
                         createElement('div', { className: 'space-y-4' },
@@ -296,6 +314,424 @@
                 )
             )
         );
+
+        // Helper to get correct canvas coordinates regardless of scaling
+        const getCanvasCoords = (e, canvas) => {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        };
+
+        // --- ART SECTION: DRAWING ---
+        const DrawingTool = () => {
+            const canvasRef = useRef(null);
+            const [color, setColor] = useState('#000000');
+            const [brushSize, setBrushSize] = useState(5);
+            const [history, setHistory] = useState([]);
+            const [redoStack, setRedoStack] = useState([]);
+            const isDrawing = useRef(false);
+
+            useEffect(() => {
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                // Initialize white background
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                saveState();
+            }, []);
+
+            const saveState = () => {
+                const canvas = canvasRef.current;
+                setHistory(prev => [...prev, canvas.toDataURL()]);
+                setRedoStack([]);
+            };
+
+            const undo = () => {
+                if (history.length <= 1) return;
+                const newHistory = [...history];
+                const last = newHistory.pop();
+                setRedoStack(prev => [...prev, last]);
+                setHistory(newHistory);
+                restoreState(newHistory[newHistory.length - 1]);
+            };
+
+            const redo = () => {
+                if (redoStack.length === 0) return;
+                const newRedo = [...redoStack];
+                const next = newRedo.pop();
+                setRedoStack(newRedo);
+                setHistory(prev => [...prev, next]);
+                restoreState(next);
+            };
+
+            const restoreState = (dataUrl) => {
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                const img = new Image();
+                img.src = dataUrl;
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+            };
+
+            const startDrawing = (e) => {
+                isDrawing.current = true;
+                const coords = getCanvasCoords(e, canvasRef.current);
+                const ctx = canvasRef.current.getContext('2d');
+                ctx.beginPath();
+                ctx.moveTo(coords.x, coords.y);
+                draw(e);
+            };
+
+            const endDrawing = () => {
+                if (isDrawing.current) {
+                    isDrawing.current = false;
+                    const ctx = canvasRef.current.getContext('2d');
+                    ctx.beginPath();
+                    saveState();
+                }
+            };
+
+            const draw = (e) => {
+                if (!isDrawing.current) return;
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                const coords = getCanvasCoords(e, canvas);
+
+                ctx.lineWidth = brushSize;
+                ctx.strokeStyle = color;
+                ctx.lineTo(coords.x, coords.y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(coords.x, coords.y);
+            };
+
+            const clearCanvas = () => {
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                saveState();
+            };
+
+            const exportPNG = () => {
+                const link = document.createElement('a');
+                link.download = 'nexus-sketch.png';
+                link.href = canvasRef.current.toDataURL();
+                link.click();
+            };
+
+            return createElement('div', { className: 'flex flex-col gap-8' },
+                createElement('div', { className: 'flex flex-wrap items-center gap-4 glass p-6 rounded-3xl' },
+                    createElement('input', { type: 'color', value: color, onChange: e => setColor(e.target.value), className: 'w-12 h-12 rounded-lg cursor-pointer bg-transparent border-none' }),
+                    createElement('div', { className: 'flex flex-col gap-1' },
+                        createElement('label', { className: 'text-[10px] font-bold uppercase tracking-widest text-white/40' }, 'Size'),
+                        createElement('input', { type: 'range', min: 1, max: 100, value: brushSize, onChange: e => setBrushSize(parseInt(e.target.value)), className: 'w-32 accent-white' })
+                    ),
+                    createElement('div', { className: 'flex gap-2 ml-auto' },
+                        createElement('button', { onClick: undo, className: 'themed-btn-secondary px-6 py-2 rounded-xl text-[10px] font-bold uppercase' }, 'Undo'),
+                        createElement('button', { onClick: redo, className: 'themed-btn-secondary px-6 py-2 rounded-xl text-[10px] font-bold uppercase' }, 'Redo'),
+                        createElement('button', { onClick: clearCanvas, className: 'themed-btn-secondary px-6 py-2 rounded-xl text-[10px] font-bold uppercase text-red-400' }, 'Clear'),
+                        createElement('button', { onClick: exportPNG, className: 'themed-btn px-6 py-2 rounded-xl text-[10px] font-bold uppercase' }, 'Export PNG')
+                    )
+                ),
+                createElement('div', { className: 'flex justify-center' },
+                    createElement('canvas', {
+                        ref: canvasRef, width: 1200, height: 800,
+                        className: 'art-canvas shadow-2xl w-full max-w-4xl h-auto',
+                        onMouseDown: startDrawing, onMouseMove: draw, onMouseUp: endDrawing, onMouseOut: endDrawing,
+                        onTouchStart: startDrawing, onTouchMove: draw, onTouchEnd: endDrawing
+                    })
+                )
+            );
+        };
+
+        // --- ART SECTION: ANIMATING ---
+        const AnimatingTool = () => {
+            const canvasRef = useRef(null);
+            const [frames, setFrames] = useState([null]); // Array of Data URLs
+            const [currentFrameIdx, setCurrentFrameIdx] = useState(0);
+            const [isPlaying, setIsPlaying] = useState(false);
+            const [isExporting, setIsExporting] = useState(false);
+            const [fps, setFps] = useState(12);
+            const [onionSkin, setOnionSkin] = useState(true);
+            const [showFirstFrame, setShowFirstFrame] = useState(false);
+            const [brushSize, setBrushSize] = useState(5);
+            const [color, setColor] = useState('#000000');
+            const isDrawing = useRef(false);
+            const playInterval = useRef(null);
+
+            useEffect(() => {
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                clearFrame();
+            }, []);
+
+            // Frame loading logic with sequential layer support
+            const loadFrameToCanvas = async (idx) => {
+                const canvas = canvasRef.current;
+                if (!canvas) return;
+                const ctx = canvas.getContext('2d');
+                
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                const drawImage = (src, alpha = 1.0) => new Promise((resolve) => {
+                    if (!src) return resolve();
+                    const img = new Image();
+                    img.src = src;
+                    img.onload = () => {
+                        ctx.globalAlpha = alpha;
+                        ctx.drawImage(img, 0, 0);
+                        ctx.globalAlpha = 1.0;
+                        resolve();
+                    };
+                    img.onerror = resolve;
+                });
+
+                // In playback, only draw current frame for performance/clarity
+                if (isPlaying) {
+                    await drawImage(frames[idx]);
+                } else {
+                    // Layer 1: Onion Skin (Prev Frame)
+                    if (onionSkin && idx > 0) {
+                        await drawImage(frames[idx - 1], 0.15);
+                    }
+                    // Layer 2: First Frame Ref
+                    if (showFirstFrame && idx !== 0) {
+                        await drawImage(frames[0], 0.15);
+                    }
+                    // Layer 3: Current Frame
+                    await drawImage(frames[idx], 1.0);
+                }
+            };
+
+            // Trigger frame load whenever indexing or options change
+            useEffect(() => {
+                loadFrameToCanvas(currentFrameIdx);
+            }, [currentFrameIdx, onionSkin, showFirstFrame, isPlaying]);
+
+            // Playback management
+            useEffect(() => {
+                if (isPlaying) {
+                    playInterval.current = setInterval(() => {
+                        setCurrentFrameIdx(prev => (prev + 1) % frames.length);
+                    }, 1000 / fps);
+                } else {
+                    clearInterval(playInterval.current);
+                }
+                return () => clearInterval(playInterval.current);
+            }, [isPlaying, fps, frames.length]);
+
+            const saveCurrentFrame = () => {
+                const canvas = canvasRef.current;
+                const data = canvas.toDataURL();
+                setFrames(prev => {
+                    const next = [...prev];
+                    next[currentFrameIdx] = data;
+                    return next;
+                });
+            };
+
+            const startDrawing = (e) => {
+                if (isPlaying) return;
+                isDrawing.current = true;
+                const coords = getCanvasCoords(e, canvasRef.current);
+                const ctx = canvasRef.current.getContext('2d');
+                ctx.beginPath();
+                ctx.moveTo(coords.x, coords.y);
+                draw(e);
+            };
+
+            const endDrawing = () => {
+                if (isDrawing.current) {
+                    isDrawing.current = false;
+                    const ctx = canvasRef.current.getContext('2d');
+                    ctx.beginPath();
+                    saveCurrentFrame();
+                }
+            };
+
+            const draw = (e) => {
+                if (!isDrawing.current || isPlaying) return;
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                const coords = getCanvasCoords(e, canvas);
+
+                ctx.lineWidth = brushSize;
+                ctx.strokeStyle = color;
+                ctx.lineTo(coords.x, coords.y);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.moveTo(coords.x, coords.y);
+            };
+
+            const addFrame = () => {
+                setFrames(prev => [...prev.slice(0, currentFrameIdx + 1), null, ...prev.slice(currentFrameIdx + 1)]);
+                setCurrentFrameIdx(currentFrameIdx + 1);
+            };
+
+            const deleteFrame = () => {
+                if (frames.length <= 1) return;
+                setFrames(prev => prev.filter((_, i) => i !== currentFrameIdx));
+                setCurrentFrameIdx(Math.max(0, currentFrameIdx - 1));
+            };
+
+            const duplicateFrame = () => {
+                const currentData = frames[currentFrameIdx];
+                setFrames(prev => [...prev.slice(0, currentFrameIdx + 1), currentData, ...prev.slice(currentFrameIdx + 1)]);
+                setCurrentFrameIdx(currentFrameIdx + 1);
+            };
+
+            const clearFrame = () => {
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                saveCurrentFrame();
+            };
+
+            const exportVideo = async () => {
+                if (frames.length < 2) return;
+                setIsExporting(true);
+                const canvas = canvasRef.current;
+                const stream = canvas.captureStream(fps);
+                const recorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+                const chunks = [];
+                
+                recorder.ondataavailable = (e) => chunks.push(e.data);
+                recorder.onstop = () => {
+                    const blob = new Blob(chunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'nexus-animation.webm';
+                    a.click();
+                    setIsExporting(false);
+                };
+
+                // Reset to start
+                setIsPlaying(false);
+                setCurrentFrameIdx(0);
+                
+                // Start recording
+                recorder.start();
+                setIsPlaying(true);
+
+                // Play through once and stop
+                setTimeout(() => {
+                    setIsPlaying(false);
+                    recorder.stop();
+                    setCurrentFrameIdx(0);
+                }, (1000 / fps) * frames.length + 500);
+            };
+
+            return createElement('div', { className: 'flex flex-col gap-6' },
+                createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-4 gap-6' },
+                    createElement('div', { className: 'lg:col-span-3 flex flex-col gap-6' },
+                        createElement('div', { className: 'flex justify-center relative' },
+                            createElement('canvas', {
+                                ref: canvasRef, width: 800, height: 600,
+                                className: 'art-canvas shadow-2xl w-full max-w-2xl h-auto bg-white',
+                                onMouseDown: startDrawing, onMouseMove: draw, onMouseUp: endDrawing, onMouseOut: endDrawing,
+                                onTouchStart: startDrawing, onTouchMove: draw, onTouchEnd: endDrawing
+                            }),
+                            isPlaying && createElement('div', { className: 'absolute inset-0 bg-black/10 pointer-events-none rounded-2xl flex items-center justify-center' }, 
+                                createElement('div', { className: 'badge !px-4 !py-2 !text-[12px]' }, 'PLAYING')
+                            ),
+                            isExporting && createElement('div', { className: 'absolute inset-0 bg-black/60 z-[10] flex items-center justify-center rounded-2xl flex-col gap-4' }, 
+                                createElement('div', { className: 'w-10 h-10 border-2 border-white/10 border-t-white rounded-full animate-spin' }),
+                                createElement('p', { className: 'text-[10px] font-black uppercase tracking-widest text-white' }, 'Capturing Stream...')
+                            )
+                        ),
+                        createElement('div', { className: 'flex flex-wrap items-center gap-4 glass p-6 rounded-3xl' },
+                            createElement('button', { onClick: () => setIsPlaying(!isPlaying), className: `px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${isPlaying ? 'bg-red-500 text-white' : 'themed-btn'}` }, isPlaying ? 'Pause' : 'Play Sequence'),
+                            createElement('button', { onClick: exportVideo, disabled: isExporting || frames.length < 2, className: `themed-btn-secondary px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${isExporting ? 'opacity-30' : ''}` }, 'Export WebM'),
+                            createElement('div', { className: 'flex flex-col gap-1' },
+                                createElement('label', { className: 'text-[10px] font-bold uppercase tracking-widest text-white/40' }, `FPS: ${fps}`),
+                                createElement('input', { type: 'range', min: 1, max: 60, value: fps, onChange: e => setFps(parseInt(e.target.value)), className: 'w-32 accent-white' })
+                            ),
+                            createElement('div', { className: 'h-8 w-px bg-white/10 mx-2' }),
+                            createElement('div', { className: 'flex gap-3 items-center' },
+                                createElement('button', { onClick: () => setOnionSkin(!onionSkin), className: `px-6 py-2 rounded-xl text-[9px] font-bold uppercase ${onionSkin ? 'themed-btn' : 'themed-btn-secondary opacity-50'}` }, 'Onion Skin'),
+                                createElement('button', { onClick: () => setShowFirstFrame(!showFirstFrame), className: `px-6 py-2 rounded-xl text-[9px] font-bold uppercase ${showFirstFrame ? 'themed-btn' : 'themed-btn-secondary opacity-50'}` }, 'First Frame Ref')
+                            )
+                        )
+                    ),
+                    createElement('div', { className: 'flex flex-col gap-6' },
+                        createElement('div', { className: 'glass p-6 rounded-[2.5rem] flex flex-col gap-6' },
+                            createElement('h3', { className: 'text-[10px] font-black uppercase tracking-[0.3em] text-white/50 border-b border-white/5 pb-4' }, 'Toolbox'),
+                            createElement('div', { className: 'flex flex-col gap-4' },
+                                createElement('input', { type: 'color', value: color, onChange: e => setColor(e.target.value), className: 'w-full h-12 rounded-xl cursor-pointer bg-transparent border-none' }),
+                                createElement('div', { className: 'flex flex-col gap-2' },
+                                    createElement('label', { className: 'text-[9px] font-bold uppercase tracking-widest text-white/30' }, 'Brush Size'),
+                                    createElement('input', { type: 'range', min: 1, max: 100, value: brushSize, onChange: e => setBrushSize(parseInt(e.target.value)), className: 'w-full accent-white' })
+                                ),
+                                createElement('button', { onClick: clearFrame, className: 'themed-btn-secondary w-full py-3 rounded-xl text-[10px] font-bold uppercase text-red-400' }, 'Clear Frame')
+                            )
+                        ),
+                        createElement('div', { className: 'glass p-6 rounded-[2.5rem] flex flex-col gap-4' },
+                            createElement('div', { className: 'flex justify-between items-center' },
+                                createElement('h3', { className: 'text-[10px] font-black uppercase tracking-[0.3em] text-white/50' }, 'Timeline'),
+                                createElement('span', { className: 'text-[10px] font-black text-white/30' }, `${currentFrameIdx + 1} / ${frames.length}`)
+                            ),
+                            createElement('div', { className: 'flex flex-col gap-2 max-h-[300px] overflow-y-auto visible-scroll pr-2' },
+                                frames.map((f, i) => createElement('button', { 
+                                    key: i, onClick: () => { if (!isPlaying) setCurrentFrameIdx(i); },
+                                    className: `w-full p-4 rounded-xl text-[10px] font-bold uppercase transition-all flex justify-between items-center ${currentFrameIdx === i ? 'bg-white/10 border border-white/20 text-white' : 'text-white/30 hover:text-white/60'}`
+                                }, 
+                                    `Frame ${i + 1}`,
+                                    currentFrameIdx === i && createElement('div', { className: 'w-1.5 h-1.5 rounded-full bg-white shadow-[0_0_8px_#fff]' })
+                                ))
+                            ),
+                            createElement('div', { className: 'grid grid-cols-1 gap-2 mt-2' },
+                                createElement('button', { onClick: addFrame, className: 'themed-btn w-full py-3 rounded-xl text-[9px] font-black uppercase tracking-widest' }, '+ New Frame'),
+                                createElement('div', { className: 'grid grid-cols-2 gap-2' },
+                                    createElement('button', { onClick: duplicateFrame, className: 'themed-btn-secondary py-3 rounded-xl text-[9px] font-bold uppercase' }, 'Clone'),
+                                    createElement('button', { onClick: deleteFrame, className: 'themed-btn-secondary py-3 rounded-xl text-[9px] font-bold uppercase text-red-500' }, 'Delete')
+                                )
+                            )
+                        )
+                    )
+                )
+            );
+        };
+
+        const ArtView = () => {
+            const [artMode, setArtMode] = useState('animating'); // 'animating' | 'drawing'
+
+            return createElement(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1 }, className: 'space-y-12' },
+                createElement('div', { className: 'flex flex-col md:flex-row justify-between items-center gap-6' },
+                    createElement('div', null,
+                        createElement('h2', { className: 'text-5xl font-black italic text-white uppercase tracking-tighter' }, 'Creative Suite'),
+                        createElement('p', { className: 'text-slate-600 font-medium text-lg mt-2 uppercase tracking-widest' }, 'High-fidelity visual production node.')
+                    ),
+                    createElement('div', { className: 'flex gap-3 glass p-2 rounded-3xl' },
+                        createElement('button', { 
+                            onClick: () => setArtMode('animating'), 
+                            className: `px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${artMode === 'animating' ? 'themed-btn' : 'themed-btn-secondary opacity-50'}` 
+                        }, 'Animating'),
+                        createElement('button', { 
+                            onClick: () => setArtMode('drawing'), 
+                            className: `px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${artMode === 'drawing' ? 'themed-btn' : 'themed-btn-secondary opacity-50'}` 
+                        }, 'Drawing')
+                    )
+                ),
+                artMode === 'animating' ? createElement(AnimatingTool) : createElement(DrawingTool)
+            );
+        };
 
         const IDE = ({ onDeploy, onClose }) => {
             const editorHostRef = useRef(null);
@@ -405,7 +841,7 @@
                                 const parser = new DOMParser();
                                 var doc = parser.parseFromString(html, "text/html");
                                 doc.head.innerHTML += `
-                                <script src="https://cdn.jsdelivr.net/gh/Zotronix/Ignis-Games/Games/fixes.js"><\/script>
+                                <script src="https://cdn.jsdelivr.gh/Zotronix/Ignis-Games/Games/fixes.js"><\/script>
                                 <script>
                                   const origAppendChild = Node.prototype.appendChild;
                                   Node.prototype.appendChild = function (node) {
@@ -566,16 +1002,21 @@
                         createElement('button', { onClick: () => { setActiveTab('home'); setSearch(""); }, className: `sidebar-item ${activeTab === 'home' ? 'active' : ''}` }, createElement(HomeIcon), 'launch menu'),
                         createElement('button', { onClick: () => setActiveTab('games'), className: `sidebar-item ${activeTab === 'games' ? 'active' : ''}` }, createElement(GameIcon), 'games'),
                         createElement('button', { onClick: () => setActiveTab('anime'), className: `sidebar-item ${activeTab === 'anime' ? 'active' : ''}` }, createElement(AnimeIcon), 'anime'),
+                        createElement('button', { onClick: () => setActiveTab('manga'), className: `sidebar-item ${activeTab === 'manga' ? 'active' : ''}` }, createElement(MangaIcon), 'manga'),
+                        createElement('button', { onClick: () => setActiveTab('art'), className: `sidebar-item ${activeTab === 'art' ? 'active' : ''}` }, createElement(ArtIcon), 'art studio'),
                         createElement('button', { onClick: () => setActiveTab('utilities'), className: `sidebar-item ${activeTab === 'utilities' ? 'active' : ''}` }, createElement(ToolIcon), 'tools n stuff')
                     ),
                     createElement('button', { onClick: () => setSettingsOpen(true), className: 'sidebar-item mt-auto border border-white/5 bg-white/5' }, 'Config Settings')
                 ),
 
-                activeTab !== 'home' && createElement('header', { className: 'glass sticky top-0 z-[60] px-12 py-8 border-b border-white/5 flex items-center justify-between' },
-                    createElement('h1', { className: 'text-2xl font-black italic text-white uppercase tracking-tighter' }, activeTab),
-                    createElement('div', { className: 'flex gap-5' },
-                        createElement('input', { className: 'w-96 px-8 py-4 rounded-3xl bg-white/5 border border-white/5 text-white text-sm outline-none focus:border-white/20 transition-all placeholder:opacity-30', placeholder: 'go on, search something.', value: search, onChange: e => setSearch(e.target.value) }),
-                        createElement('button', { onClick: () => setSettingsOpen(true), className: 'p-4 glass rounded-3xl hover:bg-white/10 transition-all text-slate-500 hover:text-white' }, '⚙️')
+                activeTab !== 'home' && createElement(Fragment, null,
+                    createElement('div', { className: 'header-trigger' }),
+                    createElement('header', { className: 'header-bar glass px-12 py-8 border-b border-white/5 flex items-center justify-between' },
+                        createElement('h1', { className: 'text-2xl font-black italic text-white uppercase tracking-tighter' }, activeTab),
+                        createElement('div', { className: 'flex gap-5' },
+                            activeTab === 'games' && createElement('input', { className: 'w-96 px-8 py-4 rounded-3xl bg-white/5 border border-white/5 text-white text-sm outline-none focus:border-white/20 transition-all placeholder:opacity-30', placeholder: 'go on, search something.', value: search, onChange: e => setSearch(e.target.value) }),
+                            createElement('button', { onClick: () => setSettingsOpen(true), className: 'p-4 glass rounded-3xl hover:bg-white/10 transition-all text-slate-500 hover:text-white' }, '⚙️')
+                        )
                     )
                 ),
 
@@ -597,10 +1038,10 @@
                                     createElement(React.Fragment, null,
                                         !search && createElement('section', { className: 'space-y-16 mb-40' },
                                             createElement('h2', { className: 'section-header text-4xl' }, 'Daily Spotlight'),
-                                            createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-12 gap-10' },
-                                                createElement('div', { className: 'lg:col-span-7' }, filteredData.hero && createElement(GameCard, { variant: 'hero', zone: filteredData.hero, onClick: () => setActiveZone(filteredData.hero) })),
-                                                createElement('div', { className: 'lg:col-span-5 flex flex-col gap-10' }, filteredData.restFeatured.slice(0, 2).map(g => createElement(GameCard, { key: g.id, variant: 'wide', zone: g, onClick: () => setActiveZone(g) }))),
-                                                createElement('div', { className: 'lg:col-span-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-10' }, filteredData.restFeatured.slice(2, 8).map(g => createElement(GameCard, { key: g.id, zone: g, onClick: () => setActiveZone(g) })))
+                                            createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-[repeat(13,minmax(0,1fr))] gap-10' },
+                                                createElement('div', { className: 'lg:col-span-8 lg:col-start-1' }, filteredData.hero && createElement(GameCard, { variant: 'hero', zone: filteredData.hero, onClick: () => setActiveZone(filteredData.hero) })),
+                                                createElement('div', { className: 'lg:col-span-5 lg:col-start-9 flex flex-col gap-10' }, filteredData.restFeatured.slice(0, 2).map(g => createElement(GameCard, { key: g.id, variant: 'wide', zone: g, onClick: () => setActiveZone(g) }))),
+                                                createElement('div', { className: 'lg:col-span-13 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-10' }, filteredData.restFeatured.slice(2, 8).map(g => createElement(GameCard, { key: g.id, zone: g, onClick: () => setActiveZone(g) })))
                                             )
                                         ),
                                         createElement('section', { className: 'space-y-10 mb-40' },
@@ -626,6 +1067,18 @@
                                     createElement('iframe', { id: 'anime-frame', src: 'https://hianime.to', className: 'w-full h-full border-none', sandbox: 'allow-forms allow-scripts allow-same-origin allow-presentation', allow: 'fullscreen; autoplay; encrypted-media', referrerPolicy: 'no-referrer' })
                                 )
                             )
+                        ) : activeTab === 'manga' ? (
+                            createElement(motion.div, { key: 'manga', initial: { opacity: 0, scale: 0.98 }, animate: { opacity: 1, scale: 1 }, exit: { opacity: 0, scale: 0.95 }, transition: { duration: 0.7, ease: [0.19, 1, 0.22, 1] }, className: 'space-y-12 h-[85vh] flex flex-col' },
+                                createElement('div', { className: 'flex justify-between items-center px-4' },
+                                    createElement('div', null, createElement('h2', { className: 'text-5xl font-black italic text-white uppercase tracking-tighter' }, 'Manga Portal'), createElement('p', { className: 'text-slate-600 font-medium text-lg' }, 'Secure archival manuscript uplink.')),
+                                    createElement('button', { onClick: () => document.getElementById('manga-frame').requestFullscreen(), className: 'px-14 py-4 themed-btn rounded-3xl uppercase tracking-[0.3em] text-[11px]' }, 'Enter Fullscale')
+                                ),
+                                createElement('div', { className: 'flex-1 glass rounded-[4rem] overflow-hidden' },
+                                    createElement('iframe', { id: 'manga-frame', src: 'https://weebcentral.com', className: 'w-full h-full border-none', sandbox: 'allow-forms allow-scripts allow-same-origin allow-presentation', allow: 'fullscreen; autoplay; encrypted-media', referrerPolicy: 'no-referrer' })
+                                )
+                            )
+                        ) : activeTab === 'art' ? (
+                            createElement(ArtView, { key: 'art' })
                         ) : (
                             createElement(motion.div, { key: 'utils', initial: { opacity: 0, y: 30 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -30 }, transition: { duration: 0.7, ease: [0.19, 1, 0.22, 1] }, className: 'max-w-6xl mx-auto space-y-28' },
                                 createElement('div', { className: 'text-center' }, createElement('h2', { className: 'text-7xl font-black italic text-white uppercase tracking-tighter' }, 'Utilities'), createElement('p', { className: 'text-slate-600 text-2xl mt-6' }, 'Nexus developer toolchain.')),
@@ -651,9 +1104,11 @@
 
                 activeTab === 'home' && createElement('div', { className: 'dock-wrapper' },
                     createElement(InteractiveTilt, { scale: 1.12, rotate: 6 },
-                        createElement(motion.div, { initial: { opacity: 0, y: 40 }, animate: { opacity: 1, y: 0 }, transition: { duration: 1, delay: 0.2, ease: [0.19, 1, 0.22, 1] }, className: 'dock' },
+                        createElement(motion.div, { initial: { opacity: 0, y: 40 }, animate: { opacity: 1, y: 0 }, transition: { duration: 1, delay: 0.2, ease: [0.19, 1, 0.22, 1] }, className: 'dock shadow-2xl border border-white/10 backdrop-blur-3xl' },
                             createElement('div', { className: 'dock-btn', onClick: () => setActiveTab('games') }, createElement(GameIcon), createElement('div', { className: 'tooltip' }, 'games')),
                             createElement('div', { className: 'dock-btn', onClick: () => setActiveTab('anime') }, createElement(AnimeIcon), createElement('div', { className: 'tooltip' }, 'anime')),
+                            createElement('div', { className: 'dock-btn', onClick: () => setActiveTab('manga') }, createElement(MangaIcon), createElement('div', { className: 'tooltip' }, 'manga')),
+                            createElement('div', { className: 'dock-btn', onClick: () => setActiveTab('art') }, createElement(ArtIcon), createElement('div', { className: 'tooltip' }, 'art')),
                             createElement('div', { className: 'dock-btn', onClick: () => setActiveTab('utilities') }, createElement(ToolIcon), createElement('div', { className: 'tooltip' }, 'tools'))
                         )
                     )
