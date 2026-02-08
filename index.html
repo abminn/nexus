@@ -798,9 +798,10 @@
             );
         };
 
-        const GameCard = ({ zone, variant = 'normal', onClick }) => {
-            const isHot = HOT_TITLES.includes(zone.name);
-            const isFeatured = FEATURED_TITLES.includes(zone.name);
+        const GameCard = ({ gameEntry, variant = 'normal', onClick }) => {
+            const prioritizedGame = gameEntry.versions['Zotronix'] || gameEntry.versions['Abminn'] || gameEntry.versions['Nexus'];
+            const isHot = HOT_TITLES.includes(gameEntry.name);
+            const isFeatured = FEATURED_TITLES.includes(gameEntry.name);
             const sizeClasses = { 
                 hero: 'aspect-square w-full h-full', 
                 wide: 'aspect-video w-full', 
@@ -808,8 +809,8 @@
                 carousel: 'aspect-[3/4] w-[220px] flex-shrink-0', 
                 vault: 'aspect-[3/4] w-full' 
             };
-            const coverSrc = zone.isLocal ? 'https://cdn.jsdelivr.net/gh/gn-math/assets@main/local_game_cover.png' : 
-                            (zone.cover.includes("{COVER_URL}") ? zone.cover.replace("{COVER_URL}", COVER_BASE) : zone.cover);
+            const coverSrc = prioritizedGame.isLocal ? 'https://cdn.jsdelivr.net/gh/gn-math/assets@main/local_game_cover.png' : 
+                            (prioritizedGame.cover.includes("{COVER_URL}") ? prioritizedGame.cover.replace("{COVER_URL}", COVER_BASE) : prioritizedGame.cover);
 
             return createElement(InteractiveTilt, { className: sizeClasses[variant] },
                 createElement(motion.div, { 
@@ -821,27 +822,33 @@
                     createElement('div', { className: 'absolute top-4 left-4 flex gap-2' },
                         isHot && createElement('span', { className: 'badge' }, '🔥'),
                         isFeatured && createElement('span', { className: 'badge' }, '⭐'),
-                        zone.isLocal && createElement('span', { className: 'badge !bg-sky-500 !text-white' }, 'DEV')
+                        prioritizedGame.isLocal && createElement('span', { className: 'badge !bg-sky-500 !text-white' }, 'DEV')
                     ),
                     createElement('div', { className: 'absolute bottom-0 left-0 right-0 p-8' },
-                        createElement('p', { className: `font-bold truncate text-white uppercase italic tracking-[0.1em] ${variant === 'hero' ? 'text-4xl' : 'text-[11px]'}` }, zone.name)
+                        createElement('p', { className: `font-bold truncate text-white uppercase italic tracking-[0.1em] ${variant === 'hero' ? 'text-4xl' : 'text-[11px]'}` }, gameEntry.name)
                     )
                 )
             );
         };
 
-        const GamePlayer = ({ zone, onClose }) => {
+        const GamePlayer = ({ gameEntry, onClose }) => {
+            const availableSources = Object.keys(gameEntry.versions);
+            const [currentSource, setCurrentSource] = useState(
+                availableSources.includes('Zotronix') ? 'Zotronix' : availableSources[0]
+            );
             const [isLoading, setIsLoading] = useState(true);
             const [playerUrl, setPlayerUrl] = useState('');
             const containerRef = useRef(null);
 
+            const activeVersion = gameEntry.versions[currentSource];
+
             useEffect(() => {
                 const resolveAndLoad = async () => {
                     setIsLoading(true);
-                    let finalUrl = zone.url;
-                    if (!zone.isLocal && !zone.isIDE && finalUrl.includes("{HTML_URL}")) finalUrl = zone.url.replace("{HTML_URL}", HTML_BASE);
+                    let finalUrl = activeVersion.url;
+                    if (!activeVersion.isLocal && !activeVersion.isIDE && finalUrl.includes("{HTML_URL}")) finalUrl = activeVersion.url.replace("{HTML_URL}", HTML_BASE);
 
-                    const isSingleHtml = finalUrl.endsWith(".html") && !zone.isUnity && !zone.isLocal && !zone.isIDE;
+                    const isSingleHtml = finalUrl.endsWith(".html") && !activeVersion.isUnity && !activeVersion.isLocal && !activeVersion.isIDE;
 
                     if (isSingleHtml) {
                         try {
@@ -893,14 +900,25 @@
                 };
                 resolveAndLoad();
                 return () => { if (playerUrl && playerUrl.startsWith('blob:')) URL.revokeObjectURL(playerUrl); };
-            }, [zone]);
+            }, [activeVersion]);
 
             return createElement(motion.div, { 
                 initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 0.8 },
                 className: `fixed inset-0 z-[120] bg-black flex flex-col` 
             },
                 createElement('header', { className: 'glass px-8 py-5 flex items-center justify-between border-b border-white/10' },
-                    createElement('span', { className: 'text-white font-bold text-[12px] uppercase tracking-[0.3em] opacity-80' }, zone.name),
+                    createElement('div', { className: 'flex items-center gap-6' },
+                        createElement('span', { className: 'text-white font-bold text-[12px] uppercase tracking-[0.3em] opacity-80' }, gameEntry.name),
+                        availableSources.length > 1 && createElement('div', { className: 'flex items-center gap-3 glass p-1 rounded-2xl px-4' },
+                            createElement('span', { className: 'text-[9px] font-black uppercase text-white/30 tracking-widest' }, 'Servers'),
+                            createElement('div', { className: 'flex gap-2' },
+                                availableSources.map(src => createElement('button', {
+                                    key: src, onClick: () => setCurrentSource(src),
+                                    className: `px-3 py-1.5 rounded-xl text-[9px] font-black uppercase transition-all ${currentSource === src ? 'bg-white text-black' : 'hover:bg-white/5 text-white/50'}`
+                                }, src))
+                            )
+                        )
+                    ),
                     createElement('div', { className: 'flex gap-4' },
                         createElement('button', { onClick: () => containerRef.current?.requestFullscreen(), className: 'px-8 py-2.5 glass rounded-2xl text-[11px] font-bold uppercase hover:bg-white/10' }, 'fullscreen'),
                         createElement('button', { onClick: onClose, className: 'px-8 py-2.5 bg-red-500/10 text-red-500 rounded-2xl text-[11px] font-bold uppercase hover:bg-red-500/20' }, 'go bye bye')
@@ -963,7 +981,7 @@
             const [zones, setZones] = useState([]);
             const [search, setSearch] = useState("");
             const [activeTab, setActiveTab] = useState('home');
-            const [activeZone, setActiveZone] = useState(null);
+            const [activeGame, setActiveGame] = useState(null);
             const [currentTheme, setCurrentTheme] = useState('dark');
             const [cloak, setCloak] = useState('Nexus');
             const [settingsOpen, setSettingsOpen] = useState(false);
@@ -980,50 +998,47 @@
                             fetch(ABMINN_API).then(r => r.json())
                         ]);
 
-                        // Helper to process GitHub repo contents
-                        const processGitHubRepo = (res, base, images) => {
-                            if (res.status !== 'fulfilled' || !Array.isArray(res.value)) return [];
-                            return res.value
-                                .filter(item => item.type === 'dir' && !adminGames.includes(item.name))
-                                .map(folder => ({
-                                    name: folder.name.replace(/%20/g, ' '),
-                                    url: `${base}${folder.name}/index.html`,
-                                    cover: `${images}${folder.name}.png`,
-                                    id: `${folder.name.toLowerCase().replace(/\s/g, '-')}`
-                                }));
+                        const registry = new Map();
+
+                        const addVersion = (name, data, source) => {
+                            const key = name.toLowerCase().trim().replace(/\s/g, '');
+                            if (!registry.has(key)) {
+                                registry.set(key, { name: name.trim(), versions: {} });
+                            }
+                            registry.get(key).versions[source] = data;
                         };
 
-                        const zotronixGames = processGitHubRepo(zotronixRes, ZOTRONIX_BASE, ZOTRONIX_IMAGES);
-                        const abminnGames = processGitHubRepo(abminnRes, ABMINN_BASE, ABMINN_IMAGES);
-                        const nexusGames = nexusRes.status === 'fulfilled' ? nexusRes.value : [];
+                        // 1. Process Nexus
+                        if (nexusRes.status === 'fulfilled') {
+                            nexusRes.value.forEach(g => addVersion(g.name, g, 'Nexus'));
+                        }
 
-                        // Deduplication Strategy: Normalized name map
-                        // PRIORITY: Zotronix (High) > Abminn > Nexus (Base)
-                        const uniqueMap = new Map();
+                        // 2. Process Abminn
+                        if (abminnRes.status === 'fulfilled' && Array.isArray(abminnRes.value)) {
+                            abminnRes.value
+                                .filter(item => item.type === 'dir' && !adminGames.includes(item.name))
+                                .forEach(f => addVersion(f.name.replace(/%20/g, ' '), {
+                                    name: f.name.replace(/%20/g, ' '),
+                                    url: `${ABMINN_BASE}${f.name}/index.html`,
+                                    cover: `${ABMINN_IMAGES}${f.name}.png`
+                                }, 'Abminn'));
+                        }
 
-                        // 1. Add Nexus base first (lowest priority)
-                        nexusGames.forEach(game => {
-                            const key = game.name.toLowerCase().trim().replace(/\s/g, '');
-                            uniqueMap.set(key, game);
-                        });
+                        // 3. Process Zotronix
+                        if (zotronixRes.status === 'fulfilled' && Array.isArray(zotronixRes.value)) {
+                            zotronixRes.value
+                                .filter(item => item.type === 'dir' && !adminGames.includes(item.name))
+                                .forEach(f => addVersion(f.name.replace(/%20/g, ' '), {
+                                    name: f.name.replace(/%20/g, ' '),
+                                    url: `${ZOTRONIX_BASE}${f.name}/index.html`,
+                                    cover: `${ZOTRONIX_IMAGES}${f.name}.png`
+                                }, 'Zotronix'));
+                        }
 
-                        // 2. Add Abminn (will overwrite Nexus duplicates)
-                        abminnGames.forEach(game => {
-                            const key = game.name.toLowerCase().trim().replace(/\s/g, '');
-                            uniqueMap.set(key, game);
-                        });
-
-                        // 3. Add Zotronix (highest priority, will overwrite everything)
-                        zotronixGames.forEach(game => {
-                            const key = game.name.toLowerCase().trim().replace(/\s/g, '');
-                            uniqueMap.set(key, game);
-                        });
-
-                        setZones(Array.from(uniqueMap.values()));
+                        setZones(Array.from(registry.values()));
                     } catch (error) {
                         console.error("Game loading failed:", error);
-                        // Safe fallback to base zones if all else fails
-                        fetch(ZONES_URL).then(r => r.json()).then(setZones).catch(() => {});
+                        fetch(ZONES_URL).then(r => r.json()).then(res => setZones(res.map(g => ({ name: g.name, versions: { Nexus: g } })))).catch(() => {});
                     }
                 };
                 loadGames();
@@ -1107,20 +1122,20 @@
                                         !search && createElement('section', { className: 'space-y-16 mb-40' },
                                             createElement('h2', { className: 'section-header text-4xl' }, 'Daily Spotlight'),
                                             createElement('div', { className: 'grid grid-cols-1 lg:grid-cols-[repeat(13,minmax(0,1fr))] gap-10' },
-                                                createElement('div', { className: 'lg:col-span-8 lg:col-start-1' }, filteredData.hero && createElement(GameCard, { variant: 'hero', zone: filteredData.hero, onClick: () => setActiveZone(filteredData.hero) })),
-                                                createElement('div', { className: 'lg:col-span-5 lg:col-start-9 flex flex-col gap-10' }, filteredData.restFeatured.slice(0, 2).map(g => createElement(GameCard, { key: g.id, variant: 'wide', zone: g, onClick: () => setActiveZone(g) }))),
-                                                createElement('div', { className: 'lg:col-span-13 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-10' }, filteredData.restFeatured.slice(2, 8).map(g => createElement(GameCard, { key: g.id, zone: g, onClick: () => setActiveZone(g) })))
+                                                createElement('div', { className: 'lg:col-span-8 lg:col-start-1' }, filteredData.hero && createElement(GameCard, { variant: 'hero', gameEntry: filteredData.hero, onClick: () => setActiveGame(filteredData.hero) })),
+                                                createElement('div', { className: 'lg:col-span-5 lg:col-start-9 flex flex-col gap-10' }, filteredData.restFeatured.slice(0, 2).map(g => createElement(GameCard, { key: g.name, variant: 'wide', gameEntry: g, onClick: () => setActiveGame(g) }))),
+                                                createElement('div', { className: 'lg:col-span-13 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-10' }, filteredData.restFeatured.slice(2, 8).map(g => createElement(GameCard, { key: g.name, gameEntry: g, onClick: () => setActiveGame(g) })))
                                             )
                                         ),
                                         createElement('section', { className: 'space-y-10 mb-40' },
                                             createElement('h2', { className: 'section-header text-4xl' }, 'Hot Right Now'),
                                             createElement('div', { className: 'flex gap-10 overflow-x-auto pb-12 visible-scroll' },
-                                                filteredData.hot.map(g => createElement(GameCard, { key: g.id, variant: 'carousel', zone: g, onClick: () => setActiveZone(g) }))
+                                                filteredData.hot.map(g => createElement(GameCard, { key: g.name, variant: 'carousel', gameEntry: g, onClick: () => setActiveGame(g) }))
                                             )
                                         ),
                                         createElement('section', { className: 'space-y-24' }, filteredData.alpha.map(block => createElement('div', { key: block.char, className: 'vault-section mb-28' },
                                             createElement('div', { className: 'letter-header flex items-center gap-10 mb-16' }, createElement('div', { className: 'letter-circle' }, block.char), createElement('div', { className: 'flex-1 h-px bg-white/5' })),
-                                            createElement('div', { className: 'vault-grid' }, block.games.map(g => createElement(GameCard, { key: g.id, variant: 'vault', zone: g, onClick: () => setActiveZone(g) })))
+                                            createElement('div', { className: 'vault-grid' }, block.games.map(g => createElement(GameCard, { key: g.name, variant: 'vault', gameEntry: g, onClick: () => setActiveGame(g) })))
                                         )))
                                     )
                                 )
@@ -1159,7 +1174,7 @@
                                     ),
                                     createElement(InteractiveTilt, null,
                                         createElement('div', { onClick: () => fileRef.current?.click(), className: 'group utility-card glass rounded-[4rem] cursor-pointer' },
-                                            createElement('input', { type: 'file', ref: fileRef, accept: '.html', className: 'hidden', onChange: e => e.target.files[0] && setActiveZone({ name: e.target.files[0].name, url: URL.createObjectURL(e.target.files[0]), isLocal: true }) }),
+                                            createElement('input', { type: 'file', ref: fileRef, accept: '.html', className: 'hidden', onChange: e => e.target.files[0] && setActiveGame({ name: e.target.files[0].name, versions: { Local: { name: e.target.files[0].name, url: URL.createObjectURL(e.target.files[0]), isLocal: true } } }) }),
                                             createElement('h3', { className: 'text-4xl font-black italic text-white uppercase tracking-tighter' }, 'Node Upload'),
                                             createElement('p', { className: 'text-xs text-slate-600 font-black uppercase mt-6 tracking-[0.4em]' }, 'Run Local HTML Assets')
                                         )
@@ -1182,8 +1197,8 @@
                     )
                 ),
 
-                showIDE && createElement(IDE, { onClose: () => setShowIDE(false), onDeploy: code => setActiveZone({ name: 'Development Node', url: URL.createObjectURL(new Blob([code], { type: "text/html" })), isIDE: true }) }),
-                activeZone && createElement(GamePlayer, { zone: activeZone, onClose: () => setActiveZone(null) }),
+                showIDE && createElement(IDE, { onClose: () => setShowIDE(false), onDeploy: code => setActiveGame({ name: 'Development Node', versions: { IDE: { name: 'Development Node', url: URL.createObjectURL(new Blob([code], { type: "text/html" })), isIDE: true } } }) }),
+                activeGame && createElement(GamePlayer, { gameEntry: activeGame, onClose: () => setActiveGame(null) }),
                 settingsOpen && createElement(SettingsModal, { onClose: () => setSettingsOpen(false), currentTheme, onThemeChange: setCurrentTheme, currentCloak: cloak, onCloakChange: setCloak })
             );
         };
