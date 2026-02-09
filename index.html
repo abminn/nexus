@@ -848,85 +848,54 @@
                     let finalUrl = activeVersion.url;
                     if (!activeVersion.isLocal && !activeVersion.isIDE && finalUrl.includes("{HTML_URL}")) finalUrl = activeVersion.url.replace("{HTML_URL}", HTML_BASE);
 
-                    const isSingleHtml = finalUrl.endsWith(".html") && !activeVersion.isLocal && !activeVersion.isIDE;
+                    const isSingleHtml = finalUrl.endsWith(".html") && !activeVersion.isUnity && !activeVersion.isLocal && !activeVersion.isIDE;
 
                     if (isSingleHtml) {
                         try {
                             const res = await fetch(finalUrl);
-                            let html = await res.text();
-                            
-                            // Calculate base directory of the remote file
-                            const baseDir = finalUrl.substring(0, finalUrl.lastIndexOf('/') + 1);
-
-                            const parser = new DOMParser();
-                            const doc = parser.parseFromString(html, "text/html");
-
-                            // INJECT BASE TAG (Fixes "broken parts/pieces" issues by mapping relative paths to CDN)
-                            if (!doc.querySelector('base')) {
-                                const baseTag = doc.createElement('base');
-                                baseTag.href = baseDir;
-                                doc.head.prepend(baseTag);
-                            }
-
-                            // INJECT SCRIPTS
-                            const scriptsToInject = [
-                                'https://cdn.jsdelivr.net/gh/Zotronix/Ignis-Games@main/Games/fixes.js',
-                                'https://cdn.jsdelivr.net/gh/Zotronix/Ignis-Games@main/Games/files.js'
-                            ];
-
-                            scriptsToInject.forEach(src => {
-                                const s = doc.createElement('script');
-                                s.src = src;
-                                doc.head.appendChild(s);
-                            });
-
+                            var html = await res.text();
                             if (html.includes("createUnityInstance")) {
-                                const unityScript = doc.createElement('script');
-                                unityScript.textContent = `
+                                const parser = new DOMParser();
+                                var doc = parser.parseFromString(html, "text/html");
+                                doc.head.innerHTML += `
+                                <script src="https://cdn.jsdelivr.net/gh/Zotronix/Ignis-Games/Games/fixes.js"><\/script>
+                                <script>
                                   const origAppendChild = Node.prototype.appendChild;
                                   Node.prototype.appendChild = function (node) {
-                                    if (node.tagName === 'SCRIPT' && node.src && node.src.endsWith('.loader.js')) {
-                                      const prevSrc = node.src;
-                                      node.remove();
-                                      if (typeof changeUnityLoader === 'function') {
+                                    if (node.tagName === 'SCRIPT' && node.src) {
+                                      if (node.src.endsWith('.loader.js')) {
+                                        const prevSrc = node.src;
+                                        node.remove();
                                         changeUnityLoader(prevSrc).then(loaderUrl => {
                                           const script = document.createElement('script');
                                           script.src = loaderUrl;
                                           script.onload = () => {
-                                            if (typeof createUnityInstance === 'function') {
-                                              const canvas = document.querySelector("#unity-canvas") || document.querySelector("canvas");
-                                              const configObj = typeof config !== 'undefined' ? config : {};
-                                              createUnityInstance(canvas, configObj, (progress) => {
-                                                const pbar = document.querySelector("#unity-progress-bar-full") || document.querySelector(".progress-bar");
-                                                if (pbar) pbar.style.width = (100 * progress) + '%';
-                                              }).then(inst => window.unityGameInstance = inst);
-                                            }
+                                            createUnityInstance(canvas, config, (progress) => {
+                                              progressBarFull.style.width = (100 * progress) + '%';
+                                            })
+                                              .then((unityInstance) => {
+                                                unityGameInstance = unityInstance;
+                                                loadingBar.style.display = 'none';
+                                              })
+                                              .catch((message) => {
+                                                console.error(message);
+                                              });
                                           };
                                           document.body.appendChild(script);
                                         });
                                       } else { return origAppendChild.call(this, node); }
                                     } else { return origAppendChild.call(this, node); }
                                   };
-                                `;
-                                doc.head.appendChild(unityScript);
+                                <\/script>`;
+                                html = doc.documentElement.outerHTML;
                             }
-                            
-                            html = doc.documentElement.outerHTML;
-                            
-                            // YouTube Playables fix
                             if (html.includes("https://cdn.jsdelivr.net/gh/bubbls/youtube-playables@main/ytgame.js")) {
                                 html = html.replaceAll("https://cdn.jsdelivr.net/gh/bubbls/youtube-playables@main/ytgame.js", "https://cdn.jsdelivr.net/gh/Zotronix/Ignis-Games@main/Games/Crossy%20Road/ytgame.js");
                             }
-
                             const blob = new Blob([html], { type: "text/html" });
                             setPlayerUrl(URL.createObjectURL(blob));
-                        } catch (e) { 
-                            console.error("Failed to inject game fixes:", e);
-                            setPlayerUrl(finalUrl); 
-                        }
-                    } else { 
-                        setPlayerUrl(finalUrl); 
-                    }
+                        } catch (e) { setPlayerUrl(finalUrl); }
+                    } else { setPlayerUrl(finalUrl); }
                     setIsLoading(false);
                 };
                 resolveAndLoad();
