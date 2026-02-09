@@ -860,6 +860,17 @@
                                 doc.head.innerHTML += `
                                 <script src="https://cdn.jsdelivr.net/gh/Zotronix/Ignis-Games/Games/fixes.js"><\/script>
                                 <script>
+                                  const realConsole = window.console;
+                                  window.runnerWindow = window;
+
+                                  window.runnerWindow.proxyConsole = {
+                                    log: (...args) => realConsole.log(...args),
+                                    error: (...args) => realConsole.error(...args),
+                                    warn: (...args) => realConsole.warn(...args),
+                                  };
+
+
+                                
                                   const origAppendChild = Node.prototype.appendChild;
                                   Node.prototype.appendChild = function (node) {
                                     if (node.tagName === 'SCRIPT' && node.src) {
@@ -875,6 +886,7 @@
                                             })
                                               .then((unityInstance) => {
                                                 unityGameInstance = unityInstance;
+                                                window.unityGameInstance = unityGameInstance;
                                                 loadingBar.style.display = 'none';
                                               })
                                               .catch((message) => {
@@ -892,11 +904,8 @@
                             if (html.includes("https://cdn.jsdelivr.net/gh/bubbls/youtube-playables@main/ytgame.js")) {
                                 html = html.replaceAll("https://cdn.jsdelivr.net/gh/bubbls/youtube-playables@main/ytgame.js", "https://cdn.jsdelivr.net/gh/Zotronix/Ignis-Games@main/Games/Crossy%20Road/ytgame.js");
                             }
-							if (html.includes("var canvas")) {
-								html = html.replace("var canvas", "window.canvas");
-							}
 							if (html.includes("var config")) {
-								html = html.replace("var config", "window.config");
+								html = html.replaceAll("var ", "window.");
 							}
                             const blob = new Blob([html], { type: "text/html" });
                             setPlayerUrl(URL.createObjectURL(blob));
