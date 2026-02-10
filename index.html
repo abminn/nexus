@@ -60,10 +60,23 @@
             --text-bright: #ffffff;
 		}
 
-		body.theme-amoled { --bg-color: #000000; --accent-color: #ffffff; --accent-rgb: 255, 255, 255; --text-bright: #ffffff; }
 		body.theme-cyber { --bg-color: #020804; --accent-color: #00ff41; --accent-rgb: 0, 255, 65; --text-bright: #00ff41; }
 		body.theme-rose { --bg-color: #0a0507; --accent-color: #fb7185; --accent-rgb: 251, 113, 133; --text-bright: #fb7185; }
 		body.theme-gold { --bg-color: #080704; --accent-color: #fbbf24; --accent-rgb: 251, 191, 36; --text-bright: #fbbf24; }
+		body.theme-emerald { --bg-color: #040805; --accent-color: #10b981; --accent-rgb: 16, 185, 129; --text-bright: #10b981; }
+		body.theme-ocean { --bg-color: #04070a; --accent-color: #0ea5e9; --accent-rgb: 14, 165, 233; --text-bright: #0ea5e9; }
+		body.theme-lavender { --bg-color: #08050a; --accent-color: #a855f7; --accent-rgb: 168, 85, 247; --text-bright: #a855f7; }
+		body.theme-crimson { --bg-color: #0a0404; --accent-color: #ef4444; --accent-rgb: 239, 68, 68; --text-bright: #ef4444; }
+		body.theme-slate { --bg-color: #09090b; --accent-color: #94a3b8; --accent-rgb: 148, 163, 184; --text-bright: #94a3b8; }
+		body.theme-neon { --bg-color: #0a0408; --accent-color: #f472b6; --accent-rgb: 244, 114, 182; --text-bright: #f472b6; }
+		body.theme-toxic { --bg-color: #080904; --accent-color: #d9f99d; --accent-rgb: 217, 249, 157; --text-bright: #d9f99d; }
+		body.theme-void { --bg-color: #020205; --accent-color: #6366f1; --accent-rgb: 99, 102, 241; --text-bright: #6366f1; }
+		body.theme-sunset { --bg-color: #0a0604; --accent-color: #f97316; --accent-rgb: 249, 115, 22; --text-bright: #f97316; }
+		body.theme-frost { --bg-color: #040a0a; --accent-color: #22d3ee; --accent-rgb: 34, 211, 238; --text-bright: #22d3ee; }
+		body.theme-plum { --bg-color: #06040a; --accent-color: #7e22ce; --accent-rgb: 126, 34, 206; --text-bright: #7e22ce; }
+		body.theme-forest { --bg-color: #020403; --accent-color: #059669; --accent-rgb: 5, 150, 105; --text-bright: #059669; }
+		body.theme-blood { --bg-color: #050101; --accent-color: #dc2626; --accent-rgb: 220, 38, 38; --text-bright: #dc2626; }
+		body.theme-solar { --bg-color: #050401; --accent-color: #fcd34d; --accent-rgb: 252, 211, 77; --text-bright: #fcd34d; }
 
 		body {
 			font-family: 'Space Grotesk', sans-serif;
@@ -119,7 +132,7 @@
 			scrollbar-width: thin;
 			scrollbar-color: rgba(var(--accent-rgb), 0.2) transparent;
 		}
-		.visible-scroll::-webkit-scrollbar { height: 6px; }
+		.visible-scroll::-webkit-scrollbar { height: 6px; width: 6px; }
 		.visible-scroll::-webkit-scrollbar-thumb { background: rgba(var(--accent-rgb), 0.2); border-radius: 10px; }
 
 		.section-header {
@@ -237,11 +250,11 @@
         const HTML_BASE = "https://cdn.jsdelivr.net/gh/gn-math/html@main";
 
         // External Repositories Config
-        const ZOTRONIX_API = "https://api.github.com/repos/Zotronix/Ignis-Games/contents/Games";
+        const ZOTRONIX_LIST = "https://cdn.jsdelivr.net/gh/Zotronix/Ignis-Games@main/Games/all.js";
         const ZOTRONIX_BASE = "https://cdn.jsdelivr.net/gh/Zotronix/Ignis-Games@main/Games/";
         const ZOTRONIX_IMAGES = "https://cdn.jsdelivr.net/gh/Zotronix/Ignis-Games@main/Images/";
 
-        const ABMINN_API = "https://api.github.com/repos/abminn/Nexus-Games/contents/Games";
+        const ABMINN_LIST = "https://cdn.jsdelivr.net/gh/abminn/Nexus-Games@main/Games/all.js";
         const ABMINN_BASE = "https://cdn.jsdelivr.net/gh/abminn/Nexus-Games@main/Games/";
         const ABMINN_IMAGES = "https://cdn.jsdelivr.net/gh/abminn/Nexus-Games@main/Images/";
 
@@ -250,10 +263,23 @@
 
         const THEMES = [
             { id: 'dark', name: 'Cosmic Minimal', class: '' },
-            { id: 'amoled', name: 'True Black', class: 'theme-amoled' },
             { id: 'cyber', name: 'Cyber Neon', class: 'theme-cyber' },
             { id: 'rose', name: 'Rose Nebula', class: 'theme-rose' },
-            { id: 'gold', name: 'Golden Sun', class: 'theme-gold' }
+            { id: 'gold', name: 'Golden Sun', class: 'theme-gold' },
+            { id: 'emerald', name: 'Emerald City', class: 'theme-emerald' },
+            { id: 'ocean', name: 'Deep Ocean', class: 'theme-ocean' },
+            { id: 'lavender', name: 'Lavender Haze', class: 'theme-lavender' },
+            { id: 'crimson', name: 'Crimson Peak', class: 'theme-crimson' },
+            { id: 'slate', name: 'Silver Slate', class: 'theme-slate' },
+            { id: 'neon', name: 'Neon Barbie', class: 'theme-neon' },
+            { id: 'toxic', name: 'Toxic Waste', class: 'theme-toxic' },
+            { id: 'void', name: 'Galactic Void', class: 'theme-void' },
+            { id: 'sunset', name: 'Sunset Blvd', class: 'theme-sunset' },
+            { id: 'frost', name: 'Frostbite', class: 'theme-frost' },
+            { id: 'plum', name: 'Royal Plum', class: 'theme-plum' },
+            { id: 'forest', name: 'Midnight Forest', class: 'theme-forest' },
+            { id: 'blood', name: 'Blood Moon', class: 'theme-blood' },
+            { id: 'solar', name: 'Solar Flare', class: 'theme-solar' }
         ];
 
         // 3D Weighted Smooth Tilt
@@ -312,7 +338,7 @@
                         ),
                         createElement('div', { className: 'space-y-4' },
                             createElement('h3', { className: 'text-[11px] font-bold accent-text uppercase tracking-widest' }, 'Visual Themes'),
-                            createElement('div', { className: 'grid grid-cols-2 gap-3' },
+                            createElement('div', { className: 'grid grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-2 visible-scroll' },
                                 THEMES.map(theme => createElement('button', { 
                                     key: theme.id, 
                                     onClick: () => onThemeChange(theme.id), 
@@ -1015,8 +1041,8 @@
                     try {
                         const [nexusRes, zotronixRes, abminnRes] = await Promise.allSettled([
                             fetch(ZONES_URL).then(r => r.json()),
-                            fetch(ZOTRONIX_API).then(r => r.json()),
-                            fetch(ABMINN_API).then(r => r.json())
+                            fetch(ZOTRONIX_LIST).then(r => r.text()),
+                            fetch(ABMINN_LIST).then(r => r.text())
                         ]);
 
                         const registry = new Map();
@@ -1029,31 +1055,33 @@
                             registry.get(key).versions[source] = data;
                         };
 
+                        const parseList = (t) => {
+                            const m = t.match(/\[([\s\S]*?)\]/);
+                            if (!m) return [];
+                            return m[1].split(',').map(s => s.trim().replace(/^["']|["']$/g, '')).filter(s => s && !adminGames.includes(s));
+                        };
+
                         // 1. Process Nexus
                         if (nexusRes.status === 'fulfilled') {
                             nexusRes.value.forEach(g => addVersion(g.name, g, 'Nexus'));
                         }
 
                         // 2. Process Abminn
-                        if (abminnRes.status === 'fulfilled' && Array.isArray(abminnRes.value)) {
-                            abminnRes.value
-                                .filter(item => item.type === 'dir' && !adminGames.includes(item.name))
-                                .forEach(f => addVersion(f.name.replace(/%20/g, ' '), {
-                                    name: f.name.replace(/%20/g, ' '),
-                                    url: `${ABMINN_BASE}${f.name}/index.html`,
-                                    cover: `${ABMINN_IMAGES}${f.name}.png`
-                                }, 'Abminn'));
+                        if (abminnRes.status === 'fulfilled') {
+                            parseList(abminnRes.value).forEach(name => addVersion(name, {
+                                name: name,
+                                url: `${ABMINN_BASE}${name}/index.html`,
+                                cover: `${ABMINN_IMAGES}${name}.png`
+                            }, 'Abminn'));
                         }
 
                         // 3. Process Zotronix
-                        if (zotronixRes.status === 'fulfilled' && Array.isArray(zotronixRes.value)) {
-                            zotronixRes.value
-                                .filter(item => item.type === 'dir' && !adminGames.includes(item.name))
-                                .forEach(f => addVersion(f.name.replace(/%20/g, ' '), {
-                                    name: f.name.replace(/%20/g, ' '),
-                                    url: `${ZOTRONIX_BASE}${f.name}/index.html`,
-                                    cover: `${ZOTRONIX_IMAGES}${f.name}.png`
-                                }, 'Zotronix'));
+                        if (zotronixRes.status === 'fulfilled') {
+                            parseList(zotronixRes.value).forEach(name => addVersion(name, {
+                                name: name,
+                                url: `${ZOTRONIX_BASE}${name}/index.html`,
+                                cover: `${ZOTRONIX_IMAGES}${name}.png`
+                            }, 'Zotronix'));
                         }
 
                         setZones(Array.from(registry.values()));
