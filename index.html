@@ -1,65 +1,100 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<style>
-  body {
-    background-color: #0a0a0a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
-    font-family: 'Courier New', Courier, monospace;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retired FRFR</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  .code-container {
-    position: relative;
-    padding: 20px 40px;
-    background: #121212;
-    border: 1px solid #00ff41;
-    border-radius: 8px;
-    box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
-    overflow: hidden;
-  }
+        body {
+            background: #050505;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            color: white;
+        }
 
-  .code-container::before {
-    content: "TERMINAL_V.2.0.26";
-    position: absolute;
-    top: 0;
-    left: 10px;
-    font-size: 10px;
-    color: #00ff41;
-    opacity: 0.5;
-  }
+        /* The Video Container */
+        .video-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+        }
 
-  code {
-    color: #00ff41;
-    font-size: 1.5rem;
-    text-shadow: 0 0 8px rgba(0, 255, 65, 0.8);
-    white-space: nowrap;
-  }
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* Added a slight blur to the video for that 'dreamy' modern look */
+            filter: brightness(0.5) blur(2px);
+        }
 
-  .cursor {
-    display: inline-block;
-    width: 10px;
-    height: 1.5rem;
-    background-color: #00ff41;
-    margin-left: 5px;
-    animation: blink 1s infinite;
-    vertical-align: middle;
-  }
+        /* Dark overlay to make text pop */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 20%, rgba(0,0,0,0.4) 100%);
+            z-index: -1;
+        }
 
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-  }
-</style>
+        /* The Main Aesthetic Card */
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px 60px;
+            border-radius: 100px; /* Pill shape for modern look */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: float 4s ease-in-out infinite;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: scale(1.02);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: lowercase;
+            background: linear-gradient(to bottom, #fff, #999);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+    </style>
 </head>
 <body>
 
-<div class="code-container">
-  <code>print("am retired frfr dont eat me pls")</code><span class="cursor"></span>
-</div>
+    <div class="video-wrapper">
+        <video autoplay muted loop playsinline crossorigin="anonymous">
+            <source src="https://files.catbox.moe/kgwbtv.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div class="overlay"></div>
+
+    <div class="card">
+        <h1>am retired frfr dont eat me pls</h1>
+    </div>
 
 </body>
 </html>
