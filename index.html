@@ -1,1 +1,65 @@
-bro i swear i wont make games again pls dont eat me
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body {
+    background-color: #0a0a0a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: 'Courier New', Courier, monospace;
+  }
+
+  .code-container {
+    position: relative;
+    padding: 20px 40px;
+    background: #121212;
+    border: 1px solid #00ff41;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+    overflow: hidden;
+  }
+
+  .code-container::before {
+    content: "TERMINAL_V.2.0.26";
+    position: absolute;
+    top: 0;
+    left: 10px;
+    font-size: 10px;
+    color: #00ff41;
+    opacity: 0.5;
+  }
+
+  code {
+    color: #00ff41;
+    font-size: 1.5rem;
+    text-shadow: 0 0 8px rgba(0, 255, 65, 0.8);
+    white-space: nowrap;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 10px;
+    height: 1.5rem;
+    background-color: #00ff41;
+    margin-left: 5px;
+    animation: blink 1s infinite;
+    vertical-align: middle;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="code-container">
+  <code>print("am retired frfr dont eat me pls")</code><span class="cursor"></span>
+</div>
+
+</body>
+</html>
